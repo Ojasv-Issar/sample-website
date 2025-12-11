@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Creative Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="logo">MY STUDIO</div>
+      <nav>
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact" class="btn-nav">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">Creative Web Design</p>
+        <h1>Websites that make your brand stand out.</h1>
+        <p class="sub">
+          Custom, responsive sites built to convert visitors into customers.
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">Book a Call</a>
+          <a href="#work" class="btn-secondary">View Projects</a>
+        </div>
+        <div class="hero-meta">
+          <span>Fast & responsive</span>
+          <span>SEO friendly</span>
+          <span>Modern animations</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="hero-card">
+          <p>Next‑gen website.</p>
+          <p><strong>Launch in weeks, not months.</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <h2 class="section-title">Services</h2>
+      <p class="section-sub">
+        Everything needed to go from idea to live, high‑performing website.
+      </p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Strategy & UX</h3>
+          <ul>
+            <li>Site mapping & content structure</li>
+            <li>User journey planning</li>
+            <li>Conversion‑focused layout</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Design & Branding</h3>
+          <ul>
+            <li>Modern UI design</li>
+            <li>Brand‑aligned visuals</li>
+            <li>Responsive components</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Development & Launch</h3>
+          <ul>
+            <li>Clean HTML, CSS & JS</li>
+            <li>GitHub Pages hosting</li>
+            <li>Basic SEO setup</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Selected work</h2>
+      <p class="section-sub">
+        A snapshot of recent projects crafted for startups and small businesses.
+      </p>
+      <div class="grid-3">
+        <div class="card project">
+          <span class="tag">SaaS</span>
+          <h3>Analytics Dashboard</h3>
+          <p>Landing page for a B2B analytics platform focused on signups.</p>
+        </div>
+        <div class="card project">
+          <span class="tag">E‑commerce</span>
+          <h3>Minimal Storefront</h3>
+          <p>Clean product layout built to drive mobile conversions.</p>
+        </div>
+        <div class="card project">
+          <span class="tag">Portfolio</span>
+          <h3>Creator Portfolio</h3>
+          <p>Personal brand hub with projects, bio, and contact funnels.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="container about-grid">
+      <div>
+        <h2 class="section-title">About</h2>
+        <p class="section-sub">
+          A small studio focused on fast, beautiful, and simple web experiences.
+        </p>
+      </div>
+      <div class="about-text">
+        <p>
+          Every project starts with understanding your goals, audience, and brand.
+          From there the site is designed, built, and optimized for clarity and speed.
+        </p>
+        <p>
+          Everything is version‑controlled on GitHub and deployed on GitHub Pages,
+          so updates are easy and hosting stays free.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section section-alt">
+    <div class="container contact-grid">
+      <div>
+        <h2 class="section-title">Let’s work together</h2>
+        <p class="section-sub">
+          Share a bit about your project and you’ll get a reply within 1–2 business days.
+        </p>
+        <ul class="contact-meta">
+          <li>Project‑ready in 1–3 weeks</li>
+          <li>Ideal for small teams and solo founders</li>
+        </ul>
+      </div>
+      <form class="card contact-form" name="contact">
+        <label>
+          Name
+          <input type="text" name="name" placeholder="Your name" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </label>
+        <label>
+          Project details
+          <textarea name="message" rows="4" placeholder="Tell me about your project"></textarea>
+        </label>
+        <button type="submit" class="btn-primary full-width">
+          Send message
+        </button>
+        <p class="form-note">
+          This is a static example form. Connect it to a service like Formspree or Netlify Forms to receive submissions.
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> My Studio. All rights reserved.</span>
+      <span>Built with HTML, CSS & GitHub Pages.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
