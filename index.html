@@ -112,6 +112,50 @@
             text-transform: lowercase;
         }
         
+        /* Terminal Background for Sections */
+        .terminal-bg {
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 30px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .terminal-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: rgba(40, 40, 40, 0.9);
+            border-bottom: 1px solid #444;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .terminal-dots {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 1;
+        }
+        
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff6b35;
+            opacity: 0.5;
+        }
+        
+        .terminal-content {
+            margin-top: 20px;
+        }
+        
         /* Experience Items */
         .experience-item, .project-item, .education-item {
             margin-bottom: 40px;
@@ -302,65 +346,75 @@
         <div class="section" id="experience">
             <h2>$ experience</h2>
             
-            <div class="experience-item">
-                <div class="item-header">
-                    <div class="item-title">Graduate Teaching Assistant</div>
-                    <div class="item-date">Oct 2025 - Present</div>
+            <div class="terminal-bg">
+                <div class="terminal-dots">
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
                 </div>
-                <div class="item-subtitle">University of British Columbia, Vancouver</div>
-                <div class="item-description">
-                    <ul>
-                        <li>Administered large-scale assessments using PrairieLearn and Canvas for 200+ students</li>
-                        <li>Investigated academic integrity incidents with structured evidence collection</li>
-                        <li>Resolved real-time technical failures during high-stakes exams</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="experience-item">
-                <div class="item-header">
-                    <div class="item-title">Data Scientist (Freelance)</div>
-                    <div class="item-date">Jun 2022 - Present</div>
-                </div>
-                <div class="item-subtitle">Independent Consultant, Remote</div>
-                <div class="item-description">
-                    <ul>
-                        <li>Delivered end-to-end ML solutions for 15+ clients, generating $50K+ revenue</li>
-                        <li>Built production-grade models achieving 85%+ accuracy in predictive tasks</li>
-                        <li>Reduced decision-making time by 40% through actionable data pipelines</li>
-                        <li>Mentored 30+ students in data science with 95% satisfaction rate</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="experience-item">
-                <div class="item-header">
-                    <div class="item-title">Data Analyst Intern</div>
-                    <div class="item-date">Jan 2024 - Jun 2024</div>
-                </div>
-                <div class="item-subtitle">Quadrific Media Pvt. Ltd., Gurugram</div>
-                <div class="item-description">
-                    <ul>
-                        <li>Designed tournament payout structure deployed for 50K+ participants</li>
-                        <li>Developed churn prediction model with 87% accuracy, reducing churn by 23%</li>
-                        <li>Implemented fraud detection reducing fraudulent transactions by 35%</li>
-                        <li>Led migration to Snowflake, reducing query latency by 60%</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="experience-item">
-                <div class="item-header">
-                    <div class="item-title">Data Engineering Researcher</div>
-                    <div class="item-date">Jun 2023 - Dec 2023</div>
-                </div>
-                <div class="item-subtitle">KG4ASTRA Extension Programme, Remote</div>
-                <div class="item-description">
-                    <ul>
-                        <li>Designed ontology graphs for 200+ missile systems using Neo4j and Protégé</li>
-                        <li>Developed NLP models achieving 92% classification accuracy</li>
-                        <li>Reduced information retrieval time by 70% through structured queries</li>
-                    </ul>
+                
+                <div class="terminal-content">
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div class="item-title">Graduate Teaching Assistant</div>
+                            <div class="item-date">Oct 2025 - Present</div>
+                        </div>
+                        <div class="item-subtitle">University of British Columbia, Vancouver</div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Administered large-scale assessments using PrairieLearn and Canvas for 200+ students</li>
+                                <li>Investigated academic integrity incidents with structured evidence collection</li>
+                                <li>Resolved real-time technical failures during high-stakes exams</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div class="item-title">Data Scientist (Freelance)</div>
+                            <div class="item-date">Jun 2022 - Present</div>
+                        </div>
+                        <div class="item-subtitle">Independent Consultant, Remote</div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Delivered end-to-end ML solutions for 15+ clients, generating $50K+ revenue</li>
+                                <li>Built production-grade models achieving 85%+ accuracy in predictive tasks</li>
+                                <li>Reduced decision-making time by 40% through actionable data pipelines</li>
+                                <li>Mentored 30+ students in data science with 95% satisfaction rate</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div class="item-title">Data Analyst Intern</div>
+                            <div class="item-date">Jan 2024 - Jun 2024</div>
+                        </div>
+                        <div class="item-subtitle">Quadrific Media Pvt. Ltd., Gurugram</div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Designed tournament payout structure deployed for 50K+ participants</li>
+                                <li>Developed churn prediction model with 87% accuracy, reducing churn by 23%</li>
+                                <li>Implemented fraud detection reducing fraudulent transactions by 35%</li>
+                                <li>Led migration to Snowflake, reducing query latency by 60%</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div class="item-title">Data Engineering Researcher</div>
+                            <div class="item-date">Jun 2023 - Dec 2023</div>
+                        </div>
+                        <div class="item-subtitle">KG4ASTRA Extension Programme, Remote</div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Designed ontology graphs for 200+ missile systems using Neo4j and Protégé</li>
+                                <li>Developed NLP models achieving 92% classification accuracy</li>
+                                <li>Reduced information retrieval time by 70% through structured queries</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -368,85 +422,106 @@
         <div class="section" id="projects">
             <h2>$ key_projects</h2>
             
-            <div class="project-item">
-                <div class="item-header">
-                    <div class="item-title">
-                        <a href="https://github.com/Vin-dictive/ubc-reddit-reporter" class="project-link" target="_blank">Reddit UBC Reporter</a>
+            <div class="terminal-bg">
+                <div class="terminal-dots">
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
+                </div>
+                
+                <div class="terminal-content">
+                    <div class="project-item">
+                        <div class="item-header">
+                            <div class="item-title">
+                                <a href="https://github.com/Vin-dictive/ubc-reddit-reporter" class="project-link" target="_blank">Reddit UBC Reporter</a>
+                            </div>
+                            <div class="item-date">Jan 2025</div>
+                        </div>
+                        <div class="item-subtitle">AWS Lambda, Python, Bedrock AI, SAM</div>
+                        <div class="item-description">
+                            Architected serverless application with 4 Lambda functions for automated Reddit data processing. Implemented dual-model architecture using Claude & Llama, processing 1000+ posts weekly with EventBridge scheduling.
+                        </div>
                     </div>
-                    <div class="item-date">Jan 2025</div>
-                </div>
-                <div class="item-subtitle">AWS Lambda, Python, Bedrock AI, SAM</div>
-                <div class="item-description">
-                    Architected serverless application with 4 Lambda functions for automated Reddit data processing. Implemented dual-model architecture using Claude & Llama, processing 1000+ posts weekly with EventBridge scheduling.
-                </div>
-            </div>
-            
-            <div class="project-item">
-                <div class="item-header">
-                    <div class="item-title">
-                        <a href="https://github.com/kessler24/predicting_daily_land_average_earth_temperature" class="project-link" target="_blank">Climate Change Forecasting</a>
+                    
+                    <div class="project-item">
+                        <div class="item-header">
+                            <div class="item-title">
+                                <a href="https://github.com/kessler24/predicting_daily_land_average_earth_temperature" class="project-link" target="_blank">Climate Change Forecasting</a>
+                            </div>
+                            <div class="item-date">Dec 2022</div>
+                        </div>
+                        <div class="item-subtitle">Python, SVR, Random Forest, Docker</div>
+                        <div class="item-description">
+                            Analyzed 250 years of Berkeley Earth temperature data to forecast global warming trends through 2030. Achieved best performance with SVR predicting 10.56°C for 2030 (2°C above baseline).
+                        </div>
                     </div>
-                    <div class="item-date">Dec 2022</div>
-                </div>
-                <div class="item-subtitle">Python, SVR, Random Forest, Docker</div>
-                <div class="item-description">
-                    Analyzed 250 years of Berkeley Earth temperature data to forecast global warming trends through 2030. Achieved best performance with SVR predicting 10.56°C for 2030 (2°C above baseline).
-                </div>
-            </div>
-            
-            <div class="project-item">
-                <div class="item-header">
-                    <div class="item-title">
-                        <a href="https://github.com/harshil2sharma/Applying-Machine-Learning-Principles-to-Categorize-Asteroids-as-Hazardous-or-Non-Hazardous" class="project-link" target="_blank">Asteroid Hazard Classification</a>
+                    
+                    <div class="project-item">
+                        <div class="item-header">
+                            <div class="item-title">
+                                <a href="https://github.com/harshil2sharma/Applying-Machine-Learning-Principles-to-Categorize-Asteroids-as-Hazardous-or-Non-Hazardous" class="project-link" target="_blank">Asteroid Hazard Classification</a>
+                            </div>
+                            <div class="item-date">Nov 2023</div>
+                        </div>
+                        <div class="item-subtitle">Python, Random Forest, XGBoost</div>
+                        <div class="item-description">
+                            Developed binary classification system using NASA JPL Database (90K+ asteroids) to distinguish potentially hazardous asteroids. Achieved 94% precision with ensemble Random Forest classifier.
+                        </div>
                     </div>
-                    <div class="item-date">Nov 2023</div>
-                </div>
-                <div class="item-subtitle">Python, Random Forest, XGBoost</div>
-                <div class="item-description">
-                    Developed binary classification system using NASA JPL Database (90K+ asteroids) to distinguish potentially hazardous asteroids. Achieved 94% precision with ensemble Random Forest classifier.
-                </div>
-            </div>
-            
-            <div class="project-item">
-                <div class="item-header">
-                    <div class="item-title">
-                        <a href="https://github.com/harshil2sharma/SneakerXchange" class="project-link" target="_blank">SneakerXchange — HCI Platform</a>
+                    
+                    <div class="project-item">
+                        <div class="item-header">
+                            <div class="item-title">
+                                <a href="https://github.com/harshil2sharma/SneakerXchange" class="project-link" target="_blank">SneakerXchange — HCI Platform</a>
+                            </div>
+                            <div class="item-date">Oct 2022</div>
+                        </div>
+                        <div class="item-subtitle">UX/UI Design, Figma, WCAG</div>
+                        <div class="item-description">
+                            Designed usability-optimized sneaker marketplace applying HCI principles. Conducted 20+ user studies including A/B testing and heuristic evaluations. Implemented WCAG 2.1 AA standards. Published at ICICC 2026.
+                        </div>
                     </div>
-                    <div class="item-date">Oct 2022</div>
-                </div>
-                <div class="item-subtitle">UX/UI Design, Figma, WCAG</div>
-                <div class="item-description">
-                    Designed usability-optimized sneaker marketplace applying HCI principles. Conducted 20+ user studies including A/B testing and heuristic evaluations. Implemented WCAG 2.1 AA standards. Published at ICICC 2026.
                 </div>
             </div>
         </div>
         
         <div class="section" id="skills">
             <h2>$ technical_skills</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>languages & frameworks</h3>
-                    <p>Python, R, SQL, PyTorch, TensorFlow, Keras, scikit-learn, Pandas, NumPy</p>
+            
+            <div class="terminal-bg">
+                <div class="terminal-dots">
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
                 </div>
-                <div class="skill-category">
-                    <h3>machine learning</h3>
-                    <p>Regression, Classification, Time Series, NLP, Decision Trees, Random Forests, SVMs, CNNs, YOLO, GANs</p>
-                </div>
-                <div class="skill-category">
-                    <h3>generative ai</h3>
-                    <p>LLMs (GPT, Claude, Mistral, Gemini), RAG Pipelines, Vector Search, Multi-Agent Systems, Prompt Engineering</p>
-                </div>
-                <div class="skill-category">
-                    <h3>data engineering</h3>
-                    <p>BeautifulSoup, Scrapy, Playwright, REST APIs, ETL Pipelines, MongoDB, PostgreSQL, FAISS, Snowflake</p>
-                </div>
-                <div class="skill-category">
-                    <h3>mlops & cloud</h3>
-                    <p>Docker, CI/CD, Model Deployment, AWS (Lambda, S3, Bedrock), Git, GitLab</p>
-                </div>
-                <div class="skill-category">
-                    <h3>visualization</h3>
-                    <p>Matplotlib, Seaborn, Altair, ggplot2, Tableau, Power BI</p>
+                
+                <div class="terminal-content">
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h3>languages & frameworks</h3>
+                            <p>Python, R, SQL, PyTorch, TensorFlow, Keras, scikit-learn, Pandas, NumPy</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>machine learning</h3>
+                            <p>Regression, Classification, Time Series, NLP, Decision Trees, Random Forests, SVMs, CNNs, YOLO, GANs</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>generative ai</h3>
+                            <p>LLMs (GPT, Claude, Mistral, Gemini), RAG Pipelines, Vector Search, Multi-Agent Systems, Prompt Engineering</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>data engineering</h3>
+                            <p>BeautifulSoup, Scrapy, Playwright, REST APIs, ETL Pipelines, MongoDB, PostgreSQL, FAISS, Snowflake</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>mlops & cloud</h3>
+                            <p>Docker, CI/CD, Model Deployment, AWS (Lambda, S3, Bedrock), Git, GitLab</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>visualization</h3>
+                            <p>Matplotlib, Seaborn, Altair, ggplot2, Tableau, Power BI</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -454,20 +529,30 @@
         <div class="section" id="education">
             <h2>$ education</h2>
             
-            <div class="education-item">
-                <div class="item-header">
-                    <div class="item-title">Master of Data Science</div>
-                    <div class="item-date">Sep 2025 - Present</div>
+            <div class="terminal-bg">
+                <div class="terminal-dots">
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
+                    <div class="terminal-dot"></div>
                 </div>
-                <div class="item-subtitle">University of British Columbia, Vancouver</div>
-            </div>
-            
-            <div class="education-item">
-                <div class="item-header">
-                    <div class="item-title">BTech in Computer Science & Engineering</div>
-                    <div class="item-date">Aug 2020 - May 2024</div>
+                
+                <div class="terminal-content">
+                    <div class="education-item">
+                        <div class="item-header">
+                            <div class="item-title">Master of Data Science</div>
+                            <div class="item-date">Sep 2025 - Present</div>
+                        </div>
+                        <div class="item-subtitle">University of British Columbia, Vancouver</div>
+                    </div>
+                    
+                    <div class="education-item">
+                        <div class="item-header">
+                            <div class="item-title">BTech in Computer Science & Engineering</div>
+                            <div class="item-date">Aug 2020 - May 2024</div>
+                        </div>
+                        <div class="item-subtitle">Symbiosis Institute of Technology, Pune — Honours: Data Science</div>
+                    </div>
                 </div>
-                <div class="item-subtitle">Symbiosis Institute of Technology, Pune — Honours: Data Science</div>
             </div>
         </div>
         
