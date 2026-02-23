@@ -3,1003 +3,1495 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ojasv@terminal:~ resume</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<title>ojasv@ubc:~ $ ./resume.sh</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --green: #00ff9f;
-    --green-dim: #00cc7a;
-    --green-dark: #004d30;
-    --green-glow: rgba(0,255,159,0.15);
-    --amber: #ffb700;
-    --red: #ff4757;
-    --cyan: #00d4ff;
-    --bg: #040d08;
-    --bg2: #070f0a;
-    --surface: #0b1a10;
-    --border: rgba(0,255,159,0.2);
-    --text: #c0ffd8;
-    --text-dim: #5a8c6e;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  /* CRT scanline effect */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  /* Noise overlay */
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    opacity: 0.02;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9998;
-  }
-
-  /* Boot screen */
-  #boot {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: var(--bg);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 40px;
-    animation: bootFade 0.5s ease 3.8s forwards;
-  }
-
-  @keyframes bootFade {
-    to { opacity: 0; pointer-events: none; }
-  }
-
-  #boot pre {
-    color: var(--green);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    line-height: 1.2;
-    text-shadow: 0 0 10px var(--green);
-    animation: flicker 0.15s infinite;
-  }
-
-  @keyframes flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.97; }
-  }
-
-  .boot-lines {
-    margin-top: 30px;
-    width: 100%;
-    max-width: 600px;
-  }
-
-  .boot-line {
-    color: var(--text-dim);
-    font-size: 12px;
-    opacity: 0;
-    animation: fadeIn 0.1s ease forwards;
-  }
-
-  .boot-line.ok::after {
-    content: ' [  OK  ]';
-    color: var(--green);
-    float: right;
-  }
-
-  @keyframes fadeIn { to { opacity: 1; } }
-
-  /* Main layout */
-  #terminal {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
-    opacity: 0;
-    animation: mainReveal 0.6s ease 4.2s forwards;
-  }
-
-  @keyframes mainReveal {
-    to { opacity: 1; }
-  }
-
-  /* Window chrome */
-  .window {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 40px rgba(0,255,159,0.05), 0 0 0 1px rgba(0,255,159,0.05);
-    overflow: hidden;
-    transition: box-shadow 0.3s;
-  }
-
-  .window:hover {
-    box-shadow: 0 0 60px rgba(0,255,159,0.08), 0 0 0 1px rgba(0,255,159,0.1);
-  }
-
-  .titlebar {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    background: rgba(0,255,159,0.05);
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
-  }
-
-  .dots { display: flex; gap: 6px; }
-  .dot {
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .dot:hover { opacity: 0.8; }
-  .dot.r { background: #ff5f56; }
-  .dot.y { background: #ffbd2e; }
-  .dot.g { background: #27c93f; }
-
-  .title-text {
-    flex: 1;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 12px;
-  }
-
-  .content { padding: 24px; }
-
-  /* Prompt line */
-  .prompt {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .prompt-user { color: var(--green); font-weight: 700; }
-  .prompt-at { color: var(--text-dim); }
-  .prompt-host { color: var(--cyan); }
-  .prompt-path { color: var(--amber); }
-  .prompt-dollar { color: var(--text-dim); }
-  .prompt-cmd { color: var(--text); }
-
-  /* ASCII header */
-  .ascii-header {
-    color: var(--green);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    line-height: 1.15;
-    text-shadow: 0 0 20px var(--green);
-    margin-bottom: 20px;
-    white-space: pre;
-    overflow-x: auto;
-  }
-
-  /* Section headers */
-  .section-cmd {
-    color: var(--green-dim);
-    font-size: 12px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-cmd::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--border), transparent);
-  }
-
-  /* Contact bar */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .contact-item {
-    background: var(--green-glow);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.2s, border-color 0.2s;
-    text-decoration: none;
-    color: var(--text);
-  }
-
-  .contact-item:hover {
-    background: rgba(0,255,159,0.1);
-    border-color: var(--green);
-  }
-
-  .contact-icon { color: var(--green); font-size: 16px; }
-  .contact-label { color: var(--text-dim); font-size: 11px; }
-  .contact-val { color: var(--text); font-size: 12px; }
-
-  /* Summary */
-  .summary-text {
-    border-left: 2px solid var(--green);
-    padding-left: 16px;
-    color: var(--text);
-    line-height: 1.8;
-    font-size: 13px;
-  }
-
-  .summary-text span { color: var(--green); }
-
-  /* Skills grid */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 14px;
-  }
-
-  .skill-cat {
-    background: rgba(0,255,159,0.03);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 14px;
-  }
-
-  .skill-cat-title {
-    color: var(--amber);
-    font-size: 11px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .skill-cat-title::before {
-    content: '#';
-    color: var(--text-dim);
-  }
-
-  .skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .tag {
-    background: rgba(0,255,159,0.08);
-    border: 1px solid rgba(0,255,159,0.2);
-    color: var(--green-dim);
-    padding: 3px 8px;
-    border-radius: 3px;
-    font-size: 11px;
-    transition: all 0.2s;
-  }
-
-  .tag:hover {
-    background: rgba(0,255,159,0.15);
-    color: var(--green);
-    border-color: var(--green);
-    cursor: default;
-  }
-
-  /* Experience cards */
-  .exp-card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 18px;
-    margin-bottom: 14px;
-    position: relative;
-    background: rgba(0,255,159,0.02);
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  .exp-card:hover {
-    border-color: rgba(0,255,159,0.4);
-    background: rgba(0,255,159,0.04);
-  }
-
-  .exp-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--green);
-    border-radius: 4px 0 0 4px;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .exp-card:hover::before { opacity: 1; }
-
-  .exp-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-
-  .exp-company { color: var(--green); font-weight: 700; font-size: 14px; }
-  .exp-role { color: var(--cyan); font-size: 13px; }
-  .exp-period {
-    color: var(--text-dim);
-    font-size: 11px;
-    background: rgba(0,255,159,0.06);
-    padding: 3px 8px;
-    border-radius: 3px;
-    border: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .exp-loc { color: var(--text-dim); font-size: 11px; margin-bottom: 10px; }
-
-  .bullet-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .bullet-list li {
-    padding-left: 18px;
-    position: relative;
-    color: var(--text);
-    font-size: 12.5px;
-    line-height: 1.65;
-  }
-
-  .bullet-list li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: var(--green);
-  }
-
-  .bullet-list li strong {
-    color: var(--amber);
-    font-weight: 500;
-  }
-
-  /* Projects */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 14px;
-  }
-
-  .proj-card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 16px;
-    background: rgba(0,255,159,0.02);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .proj-card::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 60px; height: 60px;
-    background: radial-gradient(circle at top right, rgba(0,255,159,0.08), transparent 70%);
-    pointer-events: none;
-  }
-
-  .proj-card:hover {
-    border-color: rgba(0,255,159,0.4);
-    background: rgba(0,255,159,0.05);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,255,159,0.08);
-  }
-
-  .proj-name { color: var(--green); font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-  .proj-date { color: var(--text-dim); font-size: 11px; margin-bottom: 8px; }
-  .proj-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 10px;
-  }
-  .proj-stack span {
-    color: var(--cyan);
-    font-size: 10px;
-    background: rgba(0,212,255,0.08);
-    border: 1px solid rgba(0,212,255,0.2);
-    padding: 2px 6px;
-    border-radius: 3px;
-  }
-  .proj-desc { color: var(--text); font-size: 12px; line-height: 1.6; }
-
-  /* Education */
-  .edu-card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 18px;
-    margin-bottom: 12px;
-    background: rgba(0,255,159,0.02);
-  }
-
-  .edu-school { color: var(--green); font-weight: 700; font-size: 14px; }
-  .edu-degree { color: var(--cyan); font-size: 13px; margin: 3px 0; }
-  .edu-period { color: var(--text-dim); font-size: 11px; margin-bottom: 8px; }
-
-  /* Publications */
-  .pub-card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 16px;
-    background: rgba(0,255,159,0.02);
-  }
-
-  .pub-title { color: var(--amber); font-size: 13px; margin-bottom: 6px; }
-  .pub-venue { color: var(--text-dim); font-size: 12px; }
-  .pub-badge {
-    display: inline-block;
-    background: rgba(0,255,159,0.1);
-    border: 1px solid var(--green);
-    color: var(--green);
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-size: 10px;
-    margin-top: 6px;
-  }
-
-  /* Interactive terminal */
-  #interactive {
-    border-top: 1px solid var(--border);
-    padding-top: 20px;
-    margin-top: 10px;
-  }
-
-  .terminal-input-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-  }
-
-  #cmd-input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    flex: 1;
-    caret-color: var(--green);
-  }
-
-  .cursor-blink {
-    display: inline-block;
-    width: 8px; height: 14px;
-    background: var(--green);
-    animation: blink 1s step-end infinite;
-    vertical-align: middle;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  #output-area {
-    min-height: 40px;
-    padding: 10px 0;
-  }
-
-  .output-line {
-    margin: 2px 0;
-    font-size: 12.5px;
-    line-height: 1.6;
-    animation: fadeIn 0.1s ease;
-  }
-
-  .output-line.error { color: var(--red); }
-  .output-line.success { color: var(--green); }
-  .output-line.info { color: var(--cyan); }
-  .output-line.dim { color: var(--text-dim); }
-
-  /* Stats bar */
-  .stats-bar {
-    display: flex;
-    gap: 20px;
-    padding: 10px 24px;
-    background: rgba(0,255,159,0.03);
-    border-top: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--text-dim);
-    flex-wrap: wrap;
-  }
-
-  .stat-item { display: flex; align-items: center; gap: 6px; }
-  .stat-val { color: var(--green); font-weight: 700; }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
-
-  /* Typewriter effect classes */
-  .typewriter { overflow: hidden; border-right: 2px solid var(--green); white-space: nowrap; animation: typing 0.5s steps(30,end) forwards, blinkCursor 0.8s step-end infinite 0.5s; }
-  @keyframes typing { from { width: 0; } to { width: 100%; border-right-color: transparent; } }
-  @keyframes blinkCursor { from, to { border-color: transparent; } 50% { border-color: var(--green); } }
-
-  /* Responsive */
-  @media (max-width: 600px) {
-    .ascii-header { font-size: 7px; }
-    #terminal { padding: 10px; }
-    .content { padding: 14px; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .contact-grid { grid-template-columns: 1fr; }
-  }
+/* ════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════ */
+:root {
+  --p:    #00FF9F;   /* phosphor */
+  --p1:   #00CC7A;
+  --p2:   #008C52;
+  --p3:   #004d2e;
+  --pg:   rgba(0,255,159,.12);
+  --pg2:  rgba(0,255,159,.06);
+  --pg3:  rgba(0,255,159,.03);
+  --am:   #FFB700;   /* amber accent */
+  --am2:  rgba(255,183,0,.08);
+  --cy:   #00D4FF;   /* cyan */
+  --cy2:  rgba(0,212,255,.08);
+  --rd:   #FF4757;
+  --bg:   #030907;
+  --bg1:  #060e09;
+  --bg2:  #0a1610;
+  --bg3:  #0f1f14;
+  --txt:  #A8FFCC;
+  --txt1: #5A8C6E;
+  --txt2: #2d5038;
+  --br:   rgba(0,255,159,.14);
+  --br2:  rgba(0,255,159,.22);
+}
+/* ════════════════════════════════════════
+   THEMES — override :root vars per theme
+════════════════════════════════════════ */
+
+/* AMBER — warm amber phosphor CRT */
+[data-theme="amber"] {
+  --p:    #FFB300;
+  --p1:   #E09800;
+  --p2:   #996600;
+  --p3:   #553800;
+  --pg:   rgba(255,179,0,.12);
+  --pg2:  rgba(255,179,0,.06);
+  --pg3:  rgba(255,179,0,.03);
+  --am:   #FF8C00;
+  --am2:  rgba(255,140,0,.08);
+  --cy:   #FFD080;
+  --cy2:  rgba(255,208,128,.08);
+  --bg:   #0A0700;
+  --bg1:  #110C00;
+  --bg2:  #1A1200;
+  --bg3:  #221800;
+  --txt:  #FFDD99;
+  --txt1: #996633;
+  --txt2: #553311;
+  --br:   rgba(255,179,0,.14);
+  --br2:  rgba(255,179,0,.28);
+}
+/* CYAN — ice cold phosphor */
+[data-theme="cyan"] {
+  --p:    #00EEFF;
+  --p1:   #00BBCC;
+  --p2:   #007788;
+  --p3:   #003344;
+  --pg:   rgba(0,238,255,.12);
+  --pg2:  rgba(0,238,255,.06);
+  --pg3:  rgba(0,238,255,.03);
+  --am:   #7AF8FF;
+  --am2:  rgba(122,248,255,.08);
+  --cy:   #80FFFF;
+  --cy2:  rgba(128,255,255,.08);
+  --bg:   #00090C;
+  --bg1:  #000F14;
+  --bg2:  #00161C;
+  --bg3:  #001E26;
+  --txt:  #AAFFFF;
+  --txt1: #4A8A90;
+  --txt2: #1D4A50;
+  --br:   rgba(0,238,255,.14);
+  --br2:  rgba(0,238,255,.28);
+}
+/* RED — danger phosphor */
+[data-theme="red"] {
+  --p:    #FF3344;
+  --p1:   #CC2233;
+  --p2:   #881122;
+  --p3:   #440811;
+  --pg:   rgba(255,51,68,.12);
+  --pg2:  rgba(255,51,68,.06);
+  --pg3:  rgba(255,51,68,.03);
+  --am:   #FF8866;
+  --am2:  rgba(255,136,102,.08);
+  --cy:   #FF99AA;
+  --cy2:  rgba(255,153,170,.08);
+  --bg:   #080003;
+  --bg1:  #0F0005;
+  --bg2:  #160008;
+  --bg3:  #1F000B;
+  --txt:  #FFBBCC;
+  --txt1: #882244;
+  --txt2: #441122;
+  --br:   rgba(255,51,68,.14);
+  --br2:  rgba(255,51,68,.28);
+}
+/* PURPLE — synthwave phosphor */
+[data-theme="purple"] {
+  --p:    #CC44FF;
+  --p1:   #AA33DD;
+  --p2:   #6611AA;
+  --p3:   #330066;
+  --pg:   rgba(204,68,255,.12);
+  --pg2:  rgba(204,68,255,.06);
+  --pg3:  rgba(204,68,255,.03);
+  --am:   #FF44CC;
+  --am2:  rgba(255,68,204,.08);
+  --cy:   #CC88FF;
+  --cy2:  rgba(204,136,255,.08);
+  --bg:   #04000A;
+  --bg1:  #08000F;
+  --bg2:  #0C0018;
+  --bg3:  #110022;
+  --txt:  #DDAAFF;
+  --txt1: #773399;
+  --txt2: #331155;
+  --br:   rgba(204,68,255,.14);
+  --br2:  rgba(204,68,255,.28);
+}
+/* WHITE — paper / light mode */
+[data-theme="white"] {
+  --p:    #1A7F4A;
+  --p1:   #157040;
+  --p2:   #0D5530;
+  --p3:   #C8E6D8;
+  --pg:   rgba(26,127,74,.1);
+  --pg2:  rgba(26,127,74,.05);
+  --pg3:  rgba(26,127,74,.03);
+  --am:   #B85A00;
+  --am2:  rgba(184,90,0,.07);
+  --cy:   #0066AA;
+  --cy2:  rgba(0,102,170,.07);
+  --rd:   #CC2233;
+  --bg:   #F5F5F0;
+  --bg1:  #ECEEE8;
+  --bg2:  #E4E7E0;
+  --bg3:  #DDDFD8;
+  --txt:  #1A2A1E;
+  --txt1: #4A6A55;
+  --txt2: #8AAA94;
+  --br:   rgba(26,127,74,.16);
+  --br2:  rgba(26,127,74,.3);
+}
+/* BLUE — deep ocean phosphor */
+[data-theme="blue"] {
+  --p:    #4488FF;
+  --p1:   #3366DD;
+  --p2:   #1A3E99;
+  --p3:   #0D1F55;
+  --pg:   rgba(68,136,255,.12);
+  --pg2:  rgba(68,136,255,.06);
+  --pg3:  rgba(68,136,255,.03);
+  --am:   #66CCFF;
+  --am2:  rgba(102,204,255,.08);
+  --cy:   #88DDFF;
+  --cy2:  rgba(136,221,255,.08);
+  --bg:   #000510;
+  --bg1:  #000818;
+  --bg2:  #000C22;
+  --bg3:  #00112E;
+  --txt:  #AACCFF;
+  --txt1: #3355AA;
+  --txt2: #162255;
+  --br:   rgba(68,136,255,.14);
+  --br2:  rgba(68,136,255,.28);
+}
+
+/* ════════════════════════════════════════
+   RESET + BASE
+════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px; line-height:1.6;
+  background:var(--bg); color:var(--txt);
+  overflow-x:hidden; min-height:100vh;
+  cursor:default;
+}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--p3);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--p2)}
+
+/* ════════════════════════════════════════
+   CRT LAYERS
+════════════════════════════════════════ */
+/* scan lines */
+body::before{
+  content:''; position:fixed; inset:0; z-index:9000; pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,.04) 2px, rgba(0,0,0,.04) 4px
+  );
+}
+/* vignette */
+body::after{
+  content:''; position:fixed; inset:0; z-index:9001; pointer-events:none;
+  background:radial-gradient(ellipse 100% 100% at 50% 50%,
+    transparent 40%, rgba(0,0,0,.65) 100%);
+}
+
+/* ════════════════════════════════════════
+   THEME PICKER
+════════════════════════════════════════ */
+#theme-picker {
+  position:fixed; bottom:24px; right:24px; z-index:8500;
+  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
+}
+#theme-toggle {
+  width:38px; height:38px; border-radius:50%;
+  background:var(--bg2); border:1px solid var(--br2);
+  display:grid; place-items:center; cursor:pointer;
+  font-size:15px; transition:.2s;
+  box-shadow:0 0 20px rgba(0,0,0,.5), 0 0 12px var(--pg);
+}
+#theme-toggle:hover {
+  border-color:var(--p); box-shadow:0 0 24px var(--pg), 0 0 12px var(--pg);
+  transform:scale(1.08);
+}
+#theme-panel {
+  background:var(--bg2);
+  border:1px solid var(--br2);
+  border-radius:10px;
+  padding:14px 16px;
+  min-width:220px;
+  box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 20px var(--pg);
+  opacity:0; pointer-events:none; transform:translateY(8px) scale(.97);
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+}
+#theme-panel.open {
+  opacity:1; pointer-events:all; transform:translateY(0) scale(1);
+}
+.tp-title {
+  font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--txt2); margin-bottom:12px;
+  display:flex; align-items:center; gap:6px;
+}
+.tp-title::before { content:'// '; color:var(--txt2) }
+.tp-swatches {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:7px;
+}
+.tp-swatch {
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  cursor:pointer; padding:8px 6px; border-radius:7px;
+  border:1px solid transparent; transition:.18s;
+}
+.tp-swatch:hover { background:var(--pg2); border-color:var(--br2) }
+.tp-swatch.active { border-color:var(--p); background:var(--pg) }
+.tp-dot {
+  width:22px; height:22px; border-radius:50%;
+  border:2px solid rgba(255,255,255,.12);
+  box-shadow:0 0 8px currentColor;
+  flex-shrink:0;
+}
+.tp-label {
+  font-size:9px; letter-spacing:.06em; color:var(--txt1);
+  text-align:center;
+}
+.tp-swatch.active .tp-label { color:var(--p) }
+.tp-cmd {
+  margin-top:12px; padding-top:10px;
+  border-top:1px solid var(--br);
+  font-size:9.5px; color:var(--txt2); text-align:center;
+}
+.tp-cmd span { color:var(--am) }
+
+/* ════════════════════════════════════════
+   MATRIX RAIN CANVAS
+════════════════════════════════════════ */
+#matrix-canvas{
+  position:fixed; inset:0; z-index:0; opacity:.045;
+  pointer-events:none;
+}
+
+/* ════════════════════════════════════════
+   BOOT SCREEN
+════════════════════════════════════════ */
+#boot{
+  position:fixed; inset:0; z-index:8000;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:40px;
+  animation:boot-fade .6s ease 4.6s forwards;
+}
+@keyframes boot-fade{to{opacity:0;pointer-events:none;visibility:hidden}}
+.boot-ascii{
+  font-size:9px; line-height:1.15; color:var(--p);
+  text-shadow:0 0 12px var(--p), 0 0 24px rgba(0,255,159,.3);
+  white-space:pre; font-family:'JetBrains Mono',monospace;
+  animation:phosphor-flicker 4s ease infinite;
+}
+@keyframes phosphor-flicker{
+  0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.85} 94%{opacity:1}
+  96%{opacity:.9} 97%{opacity:1}
+}
+.boot-bar{
+  width:100%; max-width:560px; margin-top:32px;
+  background:var(--bg2); border:1px solid var(--br); border-radius:2px;
+  height:4px; overflow:hidden;
+}
+.boot-bar-fill{
+  height:100%; width:0;
+  background:linear-gradient(90deg, var(--p2), var(--p));
+  box-shadow:0 0 10px var(--p);
+  animation:bar-fill 3.6s cubic-bezier(.4,0,.2,1) .4s forwards;
+}
+@keyframes bar-fill{to{width:100%}}
+.boot-log{
+  width:100%; max-width:560px; margin-top:20px;
+  display:flex; flex-direction:column; gap:3px;
+}
+.bl{
+  font-size:11px; color:var(--txt1); opacity:0;
+  display:flex; justify-content:space-between;
+  animation:bl-in .05s ease forwards;
+}
+.bl .ok{color:var(--p); font-weight:700}
+.bl .warn{color:var(--am)}
+.bl .fail{color:var(--rd)}
+@keyframes bl-in{to{opacity:1}}
+
+/* ════════════════════════════════════════
+   MAIN WRAPPER
+════════════════════════════════════════ */
+#main{
+  position:relative; z-index:1;
+  max-width:1120px; margin:0 auto;
+  padding:20px 20px 60px;
+  opacity:0; animation:main-in .5s ease 5s forwards;
+}
+@keyframes main-in{to{opacity:1}}
+
+/* ════════════════════════════════════════
+   WINDOW CHROME
+════════════════════════════════════════ */
+.win{
+  background:var(--bg1);
+  border:1px solid var(--br);
+  border-radius:8px; overflow:hidden;
+  margin-bottom:16px;
+  box-shadow:
+    0 0 0 1px rgba(0,255,159,.04),
+    0 0 40px rgba(0,255,159,.04),
+    inset 0 1px 0 rgba(255,255,255,.03);
+  transition:box-shadow .3s, border-color .3s;
+}
+.win:hover{
+  border-color:var(--br2);
+  box-shadow:
+    0 0 0 1px rgba(0,255,159,.08),
+    0 0 60px rgba(0,255,159,.07),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+.tb{
+  display:flex; align-items:center; gap:8px;
+  padding:9px 16px;
+  background:linear-gradient(180deg, rgba(0,255,159,.07) 0%, rgba(0,255,159,.03) 100%);
+  border-bottom:1px solid var(--br);
+  position:relative;
+}
+.wdots{display:flex;gap:6px;flex-shrink:0}
+.wd{
+  width:12px; height:12px; border-radius:50%;
+  position:relative; cursor:pointer; transition:filter .2s;
+}
+.wd:hover{filter:brightness(1.3)}
+.wd::after{content:'';position:absolute;inset:3px;border-radius:50%;background:rgba(0,0,0,.2)}
+.wd.r{background:#FF5F57;box-shadow:0 0 6px rgba(255,95,87,.4)}
+.wd.y{background:#FEBC2E;box-shadow:0 0 6px rgba(254,188,46,.4)}
+.wd.g{background:#28CA40;box-shadow:0 0 6px rgba(40,202,64,.4)}
+.wt{
+  flex:1; text-align:center; color:var(--txt1);
+  font-size:11px; letter-spacing:.03em;
+}
+.wt-cmd{color:var(--p1); font-size:10px; margin-left:auto; font-weight:500}
+.pad{padding:24px}
+.pad-sm{padding:16px 24px}
+
+/* ════════════════════════════════════════
+   PROMPT
+════════════════════════════════════════ */
+.pr{
+  display:flex; align-items:center; flex-wrap:wrap; gap:0;
+  margin-bottom:16px; user-select:none;
+}
+.pr-u{color:var(--p);font-weight:700}
+.pr-at{color:var(--txt2)}
+.pr-h{color:var(--cy)}
+.pr-sep{color:var(--txt2); margin:0 1px}
+.pr-path{color:var(--am)}
+.pr-git{color:var(--p1); font-size:11px; margin-left:4px}
+.pr-${ color:var(--txt1); margin:0 6px 0 2px}
+.pr-cmd{color:var(--txt)}
+.pr-arg{color:var(--cy)}
+.pr-flag{color:var(--am)}
+.pr-str{color:var(--p1)}
+
+/* ════════════════════════════════════════
+   NEOFETCH HEADER
+════════════════════════════════════════ */
+.neofetch{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:0 40px; align-items:start;
+}
+.nf-ascii{
+  font-size:9.5px; line-height:1.18; color:var(--p);
+  text-shadow:0 0 14px rgba(0,255,159,.4);
+  white-space:pre; flex-shrink:0;
+  animation:phosphor-flicker 6s ease infinite;
+}
+.nf-info{padding-top:2px}
+.nf-title{
+  font-size:17px; font-weight:700; color:var(--p);
+  text-shadow:0 0 16px rgba(0,255,159,.5);
+  letter-spacing:-.01em; margin-bottom:4px;
+}
+.nf-sep{color:var(--txt2); margin-bottom:12px; font-size:11px}
+.nf-row{
+  display:flex; gap:6px; margin-bottom:4px;
+  font-size:12px; line-height:1.5;
+}
+.nf-key{color:var(--p1); font-weight:600; min-width:120px; flex-shrink:0}
+.nf-val{color:var(--txt)}
+.nf-val a{color:var(--cy); transition:.15s}
+.nf-val a:hover{color:var(--p); text-decoration:underline; text-underline-offset:3px}
+.nf-palette{display:flex;gap:4px;margin-top:14px}
+.nf-swatch{width:22px;height:14px;border-radius:2px}
+
+/* status badge */
+.status-badge{
+  display:inline-flex; align-items:center; gap:7px;
+  background:rgba(0,255,159,.07); border:1px solid rgba(0,255,159,.2);
+  border-radius:4px; padding:5px 10px;
+  font-size:11px; color:var(--p); margin-top:12px;
+}
+.s-dot{
+  width:7px; height:7px; border-radius:50%; background:var(--p);
+  box-shadow:0 0 8px var(--p);
+  animation:s-pulse 2s ease-in-out infinite;
+}
+@keyframes s-pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--p)}50%{opacity:.5;box-shadow:0 0 16px var(--p)}}
+
+/* ════════════════════════════════════════
+   STATS BAR
+════════════════════════════════════════ */
+.stats-bar{
+  display:flex; flex-wrap:wrap; gap:0;
+  border-top:1px solid var(--br);
+  font-size:11px; color:var(--txt1);
+}
+.sb-item{
+  display:flex; align-items:center; gap:5px;
+  padding:9px 18px;
+  border-right:1px solid var(--br);
+  transition:background .2s;
+}
+.sb-item:last-child{border-right:none; margin-left:auto}
+.sb-item:hover{background:var(--pg3)}
+.sb-key{color:var(--txt2)}
+.sb-val{color:var(--p); font-weight:700}
+.sb-sep{color:var(--txt2)}
+
+/* ════════════════════════════════════════
+   SKILLS
+════════════════════════════════════════ */
+.sk-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
+  gap:12px;
+}
+.sk-cat{
+  background:var(--pg3); border:1px solid var(--br);
+  border-radius:6px; padding:16px;
+  transition:border-color .2s, background .2s;
+  position:relative; overflow:hidden;
+}
+.sk-cat::before{
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--p2), var(--p), var(--p2));
+  transform:scaleX(0); transition:.35s;
+}
+.sk-cat:hover::before{transform:scaleX(1)}
+.sk-cat:hover{border-color:var(--br2); background:var(--pg2)}
+.sk-title{
+  color:var(--am); font-size:11px; font-weight:600;
+  letter-spacing:.06em; text-transform:uppercase;
+  margin-bottom:12px; display:flex; align-items:center; gap:6px;
+}
+.sk-title::before{content:'// ';color:var(--txt2); font-weight:400}
+.sk-tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{
+  background:var(--pg2); border:1px solid var(--br);
+  color:var(--p1); padding:2px 9px; border-radius:3px;
+  font-size:11px; letter-spacing:.02em; transition:.15s; cursor:default;
+}
+.tag:hover{background:rgba(0,255,159,.15);color:var(--p);border-color:var(--p);box-shadow:0 0 8px rgba(0,255,159,.15)}
+
+/* ════════════════════════════════════════
+   EXPERIENCE
+════════════════════════════════════════ */
+.xp-card{
+  border:1px solid var(--br); border-radius:6px;
+  padding:20px; margin-bottom:14px;
+  background:var(--pg3); position:relative;
+  transition:border-color .25s, background .25s;
+  overflow:hidden;
+}
+.xp-card::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:0;
+  background:linear-gradient(to bottom, var(--p), var(--p1));
+  transition:width .3s;
+  border-radius:6px 0 0 6px;
+}
+.xp-card:hover::before{width:3px}
+.xp-card:hover{
+  border-color:rgba(0,255,159,.35);
+  background:rgba(0,255,159,.04);
+}
+.xp-card-inner{padding-left:0; transition:padding-left .3s}
+.xp-card:hover .xp-card-inner{padding-left:12px}
+.xp-hd{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:3px}
+.xp-co{font-size:14px;font-weight:700;color:var(--p);letter-spacing:-.01em}
+.xp-co a:hover{text-decoration:underline;text-underline-offset:3px;color:var(--p1)}
+.xp-role{font-size:12px;color:var(--cy)}
+.xp-period{
+  font-size:10.5px; color:var(--txt1);
+  background:rgba(0,255,159,.06); border:1px solid var(--br);
+  padding:3px 9px; border-radius:3px; white-space:nowrap;
+}
+.xp-loc{font-size:11px; color:var(--txt2); margin:5px 0 12px}
+.bullets{list-style:none;display:flex;flex-direction:column;gap:7px}
+.bullets li{
+  padding-left:20px; position:relative;
+  color:var(--txt); font-size:12.5px; line-height:1.7;
+}
+.bullets li::before{
+  content:'▸'; position:absolute; left:0;
+  color:var(--p); transition:.15s;
+}
+.bullets li:hover::before{color:var(--am); transform:translateX(2px)}
+.bullets li strong{color:var(--am); font-weight:500}
+.bullets li a{color:var(--cy); border-bottom:1px solid transparent; transition:.15s}
+.bullets li a:hover{border-bottom-color:var(--cy)}
+
+/* ════════════════════════════════════════
+   PROJECTS
+════════════════════════════════════════ */
+.pj-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
+  gap:12px;
+}
+.pj{
+  background:var(--pg3); border:1px solid var(--br);
+  border-radius:6px; padding:18px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  transition:all .25s;
+}
+/* corner glow */
+.pj::after{
+  content:''; position:absolute; top:-20px; right:-20px;
+  width:80px; height:80px; border-radius:50%;
+  background:radial-gradient(circle, rgba(0,255,159,.12), transparent 70%);
+  pointer-events:none; transition:opacity .3s;
+  opacity:0;
+}
+.pj:hover::after{opacity:1}
+.pj:hover{
+  border-color:rgba(0,255,159,.35);
+  background:rgba(0,255,159,.05);
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(0,255,159,.08);
+}
+.pj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.pj-num{
+  font-size:9px; color:var(--txt2); letter-spacing:.12em;
+  text-transform:uppercase; padding:2px 7px;
+  background:var(--pg2); border:1px solid var(--br);
+  border-radius:2px;
+}
+.pj-link-icon{
+  color:var(--p2); font-size:12px; transition:.2s;
+  padding:2px 7px; border:1px solid transparent; border-radius:3px;
+}
+.pj:hover .pj-link-icon{color:var(--p);border-color:var(--br2)}
+.pj-name{font-size:13px;font-weight:700;color:var(--p);margin-bottom:3px}
+.pj-name a:hover{color:var(--p1)}
+.pj-date{font-size:10px;color:var(--txt2);margin-bottom:10px}
+.pj-stack{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.pj-stack span{
+  font-size:10px; color:var(--cy);
+  background:var(--cy2); border:1px solid rgba(0,212,255,.2);
+  padding:2px 7px; border-radius:3px;
+}
+.pj-desc{font-size:12px;color:var(--txt);line-height:1.7;flex:1}
+.pj-desc strong{color:var(--am);font-weight:500}
+
+/* ════════════════════════════════════════
+   EDUCATION
+════════════════════════════════════════ */
+.edu-card{
+  background:var(--pg3); border:1px solid var(--br);
+  border-radius:6px; padding:20px; margin-bottom:12px;
+  transition:border-color .2s;
+}
+.edu-card:hover{border-color:var(--br2)}
+.edu-school{font-size:14px;font-weight:700;color:var(--p)}
+.edu-school a:hover{text-decoration:underline;text-underline-offset:3px}
+.edu-deg{font-size:12px;color:var(--cy);margin:3px 0 4px}
+.edu-period{font-size:11px;color:var(--txt2);margin-bottom:10px}
+
+/* pub card */
+.pub{
+  background:var(--am2); border:1px solid rgba(255,183,0,.2);
+  border-radius:6px; padding:18px;
+  transition:border-color .2s;
+}
+.pub:hover{border-color:rgba(255,183,0,.4)}
+.pub-t{font-size:13px;font-weight:600;color:var(--am);margin-bottom:5px}
+.pub-t a:hover{text-decoration:underline;text-underline-offset:3px}
+.pub-v{font-size:11px;color:var(--txt1);line-height:1.6;margin-bottom:8px}
+.pub-badge{
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(0,255,159,.08); border:1px solid rgba(0,255,159,.25);
+  color:var(--p); font-size:10px; padding:3px 9px; border-radius:3px;
+}
+
+/* ════════════════════════════════════════
+   INTERACTIVE SHELL
+════════════════════════════════════════ */
+.sh-out{min-height:60px; padding-bottom:8px}
+.sh-line{
+  margin:1px 0; font-size:12.5px; line-height:1.65;
+  opacity:0; animation:line-in .06s ease forwards;
+}
+@keyframes line-in{to{opacity:1}}
+.sh-line.g{color:var(--p)}
+.sh-line.a{color:var(--am)}
+.sh-line.c{color:var(--cy)}
+.sh-line.e{color:var(--rd)}
+.sh-line.d{color:var(--txt1)}
+.sh-line.b{color:var(--txt); font-weight:600}
+.sh-input-row{
+  display:flex; align-items:center; gap:0;
+  margin-top:10px; padding-top:10px;
+  border-top:1px solid var(--br);
+}
+#cmd{
+  background:transparent; border:none; outline:none;
+  color:var(--txt); font-family:'JetBrains Mono',monospace;
+  font-size:13px; flex:1;
+  caret-color:var(--p);
+}
+#cmd::placeholder{color:var(--txt2)}
+
+/* ════════════════════════════════════════
+   SECTION CMD DIVIDER
+════════════════════════════════════════ */
+.sc-div{
+  display:flex; align-items:center; gap:10px;
+  color:var(--p2); font-size:11.5px; margin-bottom:20px;
+}
+.sc-div::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--br),transparent)}
+
+/* ════════════════════════════════════════
+   DIFF OUTPUT (for neofetch alt)
+════════════════════════════════════════ */
+.diff-add{color:var(--p)}
+.diff-kv{display:flex;gap:6px;margin-bottom:3px;font-size:12px}
+.diff-k{color:var(--p1);font-weight:600;min-width:110px}
+.diff-v{color:var(--txt)}
+
+/* ════════════════════════════════════════
+   GLITCH EFFECT ON HOVER
+════════════════════════════════════════ */
+.glitch{position:relative; display:inline-block}
+.glitch:hover{animation:glitch-anim .3s ease}
+@keyframes glitch-anim{
+  0%{text-shadow:none}
+  20%{text-shadow:2px 0 var(--cy), -2px 0 var(--rd)}
+  40%{text-shadow:-2px 0 var(--p), 2px 0 var(--am)}
+  60%{text-shadow:1px 0 var(--cy), -1px 0 var(--rd)}
+  80%{text-shadow:none}
+  100%{text-shadow:none}
+}
+
+/* ════════════════════════════════════════
+   TYPEWRITER CONTENT REVEAL
+════════════════════════════════════════ */
+.reveal{
+  opacity:0; transform:translateY(10px);
+  transition:opacity .4s ease, transform .4s ease;
+}
+.reveal.vis{opacity:1;transform:none}
+
+/* ════════════════════════════════════════
+   PROGRESS BARS (for skills)
+════════════════════════════════════════ */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.prog-label{color:var(--txt);font-size:11px;min-width:80px;flex-shrink:0}
+.prog-bar{
+  flex:1; height:4px; background:var(--bg3);
+  border-radius:2px; overflow:hidden;
+}
+.prog-fill{
+  height:100%; border-radius:2px;
+  background:linear-gradient(90deg, var(--p2), var(--p));
+  box-shadow:0 0 8px rgba(0,255,159,.4);
+  width:0; transition:width 1.2s cubic-bezier(.4,0,.2,1);
+}
+.prog-val{font-size:10px;color:var(--txt2);min-width:32px;text-align:right}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media(max-width:700px){
+  .neofetch{grid-template-columns:1fr}
+  .nf-ascii{display:none}
+  #main{padding:12px 12px 40px}
+  .pad{padding:16px}
+  .pj-grid{grid-template-columns:1fr}
+  .sk-grid{grid-template-columns:1fr}
+  .boot-ascii{font-size:6.5px}
+  .stats-bar{flex-direction:column}
+  .sb-item{border-right:none;border-bottom:1px solid var(--br)}
+}
 </style>
 </head>
 <body>
 
-<!-- Boot Screen -->
+<!-- Matrix Rain Canvas -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- ══════ BOOT ══════ -->
 <div id="boot">
-  <pre id="boot-ascii">
-   ██████╗      ██╗ █████╗ ███████╗██╗   ██╗
-  ██╔═══██╗     ██║██╔══██╗██╔════╝██║   ██║
-  ██║   ██║     ██║███████║███████╗██║   ██║
-  ██║   ██║██   ██║██╔══██║╚════██║╚██╗ ██╔╝
-  ╚██████╔╝╚█████╔╝██║  ██║███████║ ╚████╔╝
-   ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝  ╚═══╝</pre>
-  <div class="boot-lines" id="boot-lines"></div>
+  <pre class="boot-ascii" id="boot-art">
+  ██████╗      ██╗ █████╗ ███████╗██╗   ██╗
+ ██╔═══██╗     ██║██╔══██╗██╔════╝██║   ██║
+ ██║   ██║     ██║███████║███████╗██║   ██║
+ ██║   ██║██   ██║██╔══██║╚════██║╚██╗ ██╔╝
+ ╚██████╔╝╚█████╔╝██║  ██║███████║ ╚████╔╝
+  ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝  ╚═══╝</pre>
+  <div class="boot-bar"><div class="boot-bar-fill" id="bar-fill"></div></div>
+  <div class="boot-log" id="blog"></div>
 </div>
 
-<!-- Main Terminal -->
-<div id="terminal">
+<!-- ══════ MAIN ══════ -->
+<div id="main">
 
-  <!-- Header window -->
-  <div class="window" style="animation: slideIn 0.4s ease 4.4s both;">
-    <div class="titlebar">
-      <div class="dots">
-        <div class="dot r"></div>
-        <div class="dot y"></div>
-        <div class="dot g"></div>
-      </div>
-      <div class="title-text">ojasv@devmachine — ~/ — resume.sh — 220×50</div>
-    </div>
-    <div class="content">
-      <pre class="ascii-header">
- ██████╗      ██╗ █████╗ ███████╗██╗   ██╗    ██╗███████╗███████╗ █████╗ ██████╗
-██╔═══██╗     ██║██╔══██╗██╔════╝██║   ██║    ██║██╔════╝██╔════╝██╔══██╗██╔══██╗
-██║   ██║     ██║███████║███████╗██║   ██║    ██║███████╗███████╗███████║██████╔╝
-██║   ██║██   ██║██╔══██║╚════██║╚██╗ ██╔╝    ██║╚════██║╚════██║██╔══██║██╔══██╗
-╚██████╔╝╚█████╔╝██║  ██║███████║ ╚████╔╝     ██║███████║███████║██║  ██║██║  ██║
- ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝  ╚═══╝      ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝</pre>
-
-      <div class="prompt">
-        <span class="prompt-user">ojasv</span>
-        <span class="prompt-at">@</span>
-        <span class="prompt-host">devmachine</span>
-        <span class="prompt-at">:</span>
-        <span class="prompt-path">~/resume</span>
-        <span class="prompt-dollar">$</span>
-        <span class="prompt-cmd">cat identity.txt</span>
-      </div>
-
-      <div class="contact-grid">
-        <a class="contact-item" href="tel:+16048315490">
-          <span class="contact-icon">📱</span>
-          <div>
-            <div class="contact-label">phone</div>
-            <div class="contact-val">+1-604-831-5490</div>
-          </div>
-        </a>
-        <a class="contact-item" href="mailto:ojasvissar4@gmail.com">
-          <span class="contact-icon">✉</span>
-          <div>
-            <div class="contact-label">email</div>
-            <div class="contact-val">ojasvissar4@gmail.com</div>
-          </div>
-        </a>
-        <a class="contact-item" href="https://linkedin.com/in/ojasvissar" target="_blank">
-          <span class="contact-icon">🔗</span>
-          <div>
-            <div class="contact-label">linkedin</div>
-            <div class="contact-val">linkedin.com/in/ojasvissar</div>
-          </div>
-        </a>
-        <a class="contact-item" href="https://github.com/ojasvissar" target="_blank">
-          <span class="contact-icon">⌥</span>
-          <div>
-            <div class="contact-label">github</div>
-            <div class="contact-val">github.com/ojasvissar</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="section-cmd">$ cat summary.txt</div>
-      <p class="summary-text">
-        <span>Data Scientist & ML Engineer</span> with <span>3.5+ years</span> of experience, pursuing an <span>MDS at UBC</span>, specializing in end-to-end ML system design across <span>low-resource NLP</span>, <span>probabilistic modeling</span>, and <span>scalable data infrastructure</span>. Combines fluency in Python, R, PyTorch, transformer fine-tuning, and distributed pipeline orchestration with <span>cloud-native AWS deployment</span> — across domains from stochastic game theory to multilingual sentiment classification. Driven by a bias toward <span>production-readiness</span>: every model ships, every pipeline scales.
-      </p>
-    </div>
-    <div class="stats-bar">
-      <div class="stat-item">uptime: <span class="stat-val">3.5+ yrs</span></div>
-      <div class="stat-item">clients: <span class="stat-val">30+</span></div>
-      <div class="stat-item">models_shipped: <span class="stat-val">∞</span></div>
-      <div class="stat-item">location: <span class="stat-val">Vancouver, BC</span></div>
-      <div class="stat-item">status: <span class="stat-val" style="color:var(--green);">● OPEN TO WORK</span></div>
-    </div>
+<!-- 1. HEADER / NEOFETCH -->
+<div class="win reveal">
+  <div class="tb">
+    <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
+    <div class="wt">ojasv@ubc-mds — ~/resume — bash 5.2.21</div>
+    <div class="wt-cmd">220×50</div>
   </div>
-
-  <!-- Skills window -->
-  <div class="window">
-    <div class="titlebar">
-      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-      <div class="title-text">skills.json</div>
+  <div class="pad">
+    <div class="pr">
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-sep">:</span><span class="pr-path">~/resume</span><span class="pr-git"> (main)</span><span class="pr-$">$</span>
+      <span class="pr-cmd">neofetch</span>
     </div>
-    <div class="content">
-      <div class="prompt" style="margin-bottom:20px;">
-        <span class="prompt-user">ojasv</span><span class="prompt-at">@</span><span class="prompt-host">devmachine</span><span class="prompt-at">:</span><span class="prompt-path">~/resume</span><span class="prompt-dollar">$</span>
-        <span class="prompt-cmd">jq '.' skills.json</span>
-      </div>
-      <div class="skills-grid">
-        <div class="skill-cat">
-          <div class="skill-cat-title">languages_and_tools</div>
-          <div class="skill-tags">
-            <span class="tag">Python</span><span class="tag">R</span><span class="tag">SQL</span>
-            <span class="tag">Docker</span><span class="tag">Git</span><span class="tag">AWS Lambda</span>
-            <span class="tag">AWS S3</span><span class="tag">AWS Bedrock</span>
-          </div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-title">ml_and_dl</div>
-          <div class="skill-tags">
-            <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">scikit-learn</span>
-            <span class="tag">OpenCV</span><span class="tag">CNNs</span><span class="tag">YOLO</span>
-            <span class="tag">Transformers</span><span class="tag">GANs</span><span class="tag">Ensemble Methods</span>
-          </div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-title">generative_ai</div>
-          <div class="skill-tags">
-            <span class="tag">GPT</span><span class="tag">Claude</span><span class="tag">Mistral</span>
-            <span class="tag">Gemini</span><span class="tag">RAG Pipelines</span>
-            <span class="tag">Vector Search</span><span class="tag">Prompt Engineering</span>
-          </div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-title">data_engineering</div>
-          <div class="skill-tags">
-            <span class="tag">Apache Kafka</span><span class="tag">Apache Airflow</span><span class="tag">PySpark</span>
-            <span class="tag">Snowflake</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span>
-            <span class="tag">Neo4j</span><span class="tag">FAISS</span><span class="tag">ChromaDB</span>
-            <span class="tag">Elasticsearch</span><span class="tag">ETL Pipelines</span>
-          </div>
-        </div>
-        <div class="skill-cat">
-          <div class="skill-cat-title">visualization</div>
-          <div class="skill-tags">
-            <span class="tag">Tableau</span><span class="tag">Power BI</span><span class="tag">Matplotlib</span>
-            <span class="tag">Seaborn</span><span class="tag">ggplot2</span>
-          </div>
+
+    <div class="neofetch">
+      <!-- left: ASCII art -->
+      <pre class="nf-ascii">
+  ██████╗ ██╗
+ ██╔═══██╗██║
+ ██║   ██║██║
+ ██║   ██║██║
+ ╚██████╔╝██║
+  ╚═════╝ ╚═╝</pre>
+
+      <!-- right: system info -->
+      <div class="nf-info">
+        <div class="nf-title glitch">ojasv@ubc-mds</div>
+        <div class="nf-sep">──────────────────────────────────────────</div>
+        <div class="nf-row"><span class="nf-key">OS</span><span class="nf-val">DataScienceOS 3.5 LTS x86_64</span></div>
+        <div class="nf-row"><span class="nf-key">Role</span><span class="nf-val">Data Scientist &amp; ML Engineer</span></div>
+        <div class="nf-row"><span class="nf-key">Education</span><span class="nf-val">Master of Data Science — UBC (Jun 2026)</span></div>
+        <div class="nf-row"><span class="nf-key">Uptime</span><span class="nf-val">3.5+ years | 30+ clients delivered</span></div>
+        <div class="nf-row"><span class="nf-key">Location</span><span class="nf-val">Vancouver, BC, Canada</span></div>
+        <div class="nf-row"><span class="nf-key">Email</span><span class="nf-val"><a href="mailto:ojasvissar4@gmail.com">ojasvissar4@gmail.com</a></span></div>
+        <div class="nf-row"><span class="nf-key">Phone</span><span class="nf-val"><a href="tel:+16048315490">+1-604-831-5490</a></span></div>
+        <div class="nf-row"><span class="nf-key">LinkedIn</span><span class="nf-val"><a href="https://linkedin.com/in/ojasvissar" target="_blank">linkedin.com/in/ojasvissar</a></span></div>
+        <div class="nf-row"><span class="nf-key">GitHub</span><span class="nf-val"><a href="https://github.com/ojasvissar" target="_blank">github.com/ojasvissar</a></span></div>
+        <div class="nf-row"><span class="nf-key">Shell</span><span class="nf-val">PyTorch 2.x · AWS Bedrock · LangChain</span></div>
+        <div class="nf-row"><span class="nf-key">Published</span><span class="nf-val">ICICC 2026 · Springer LNNS · Top 15%</span></div>
+        <div class="status-badge"><div class="s-dot"></div> OPEN TO WORK — Full-time from June 2026</div>
+        <div class="nf-palette">
+          <div class="nf-swatch" style="background:#030907"></div>
+          <div class="nf-swatch" style="background:#00FF9F"></div>
+          <div class="nf-swatch" style="background:#00D4FF"></div>
+          <div class="nf-swatch" style="background:#FFB700"></div>
+          <div class="nf-swatch" style="background:#FF4757"></div>
+          <div class="nf-swatch" style="background:#A8FFCC"></div>
+          <div class="nf-swatch" style="background:#5A8C6E"></div>
+          <div class="nf-swatch" style="background:#004d2e"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Experience window -->
-  <div class="window">
-    <div class="titlebar">
-      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-      <div class="title-text">experience.log</div>
+  <!-- summary -->
+  <div class="pad" style="padding-top:0">
+    <div class="sc-div">$ cat summary.txt</div>
+    <div style="border-left:2px solid var(--p);padding-left:16px;color:var(--txt);font-size:12.5px;line-height:1.85">
+      <span style="color:var(--p)">Data Scientist &amp; ML Engineer</span> with <span style="color:var(--p)">3.5+ years</span> of experience, pursuing an <span style="color:var(--p)">MDS at UBC</span>, specializing in end-to-end ML system design across <span style="color:var(--am)">low-resource NLP</span>, <span style="color:var(--am)">probabilistic modeling</span>, and <span style="color:var(--am)">scalable data infrastructure</span>. Combines fluency in Python, R, PyTorch, transformer fine-tuning, and distributed pipeline orchestration with <span style="color:var(--cy)">cloud-native AWS deployment</span> — across domains from stochastic game theory to multilingual sentiment classification. Driven by a bias toward <span style="color:var(--p)">production-readiness</span>: every model ships, every pipeline scales.
     </div>
-    <div class="content">
-      <div class="prompt" style="margin-bottom:20px;">
-        <span class="prompt-user">ojasv</span><span class="prompt-at">@</span><span class="prompt-host">devmachine</span><span class="prompt-at">:</span><span class="prompt-path">~/resume</span><span class="prompt-dollar">$</span>
-        <span class="prompt-cmd">cat experience.log | grep -v "^#"</span>
-      </div>
+  </div>
 
-      <div class="exp-card">
-        <div class="exp-header">
+  <div class="stats-bar">
+    <div class="sb-item"><span class="sb-key">uptime</span><span class="sb-sep">:</span><span class="sb-val">3.5+ yrs</span></div>
+    <div class="sb-item"><span class="sb-key">clients</span><span class="sb-sep">:</span><span class="sb-val">30+</span></div>
+    <div class="sb-item"><span class="sb-key">models_shipped</span><span class="sb-sep">:</span><span class="sb-val">∞</span></div>
+    <div class="sb-item"><span class="sb-key">exams_proctored</span><span class="sb-sep">:</span><span class="sb-val">38K+</span></div>
+    <div class="sb-item"><span class="sb-key">pub_acceptance</span><span class="sb-sep">:</span><span class="sb-val">top 15%</span></div>
+    <div class="sb-item"><span class="sb-key">status</span><span class="sb-sep">:</span><span class="sb-val" style="color:var(--p)">● OPEN TO WORK</span></div>
+  </div>
+</div>
+
+<!-- 2. SKILLS -->
+<div class="win reveal">
+  <div class="tb">
+    <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
+    <div class="wt">skills.json — jq</div>
+  </div>
+  <div class="pad">
+    <div class="pr">
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-sep">:</span><span class="pr-path">~/resume</span><span class="pr-git"> (main)</span><span class="pr-$">$</span>
+      <span class="pr-cmd">jq </span><span class="pr-str">'.'</span><span class="pr-cmd"> skills.json </span><span class="pr-flag">| bat --theme=ansi</span>
+    </div>
+
+    <!-- proficiency bars -->
+    <div style="margin-bottom:22px">
+      <div class="sc-div">// core_proficiency</div>
+      <div id="prog-rows">
+        <div class="prog-row"><span class="prog-label">Python</span><div class="prog-bar"><div class="prog-fill" data-w="96"></div></div><span class="prog-val">96%</span></div>
+        <div class="prog-row"><span class="prog-label">ML/DL</span><div class="prog-bar"><div class="prog-fill" data-w="92"></div></div><span class="prog-val">92%</span></div>
+        <div class="prog-row"><span class="prog-label">Generative AI</span><div class="prog-bar"><div class="prog-fill" data-w="90"></div></div><span class="prog-val">90%</span></div>
+        <div class="prog-row"><span class="prog-label">Data Eng.</span><div class="prog-bar"><div class="prog-fill" data-w="88"></div></div><span class="prog-val">88%</span></div>
+        <div class="prog-row"><span class="prog-label">Cloud/AWS</span><div class="prog-bar"><div class="prog-fill" data-w="84"></div></div><span class="prog-val">84%</span></div>
+        <div class="prog-row"><span class="prog-label">R / Stats</span><div class="prog-bar"><div class="prog-fill" data-w="82"></div></div><span class="prog-val">82%</span></div>
+      </div>
+    </div>
+
+    <div class="sc-div">// tech_stack</div>
+    <div class="sk-grid">
+      <div class="sk-cat">
+        <div class="sk-title">languages &amp; tools</div>
+        <div class="sk-tags">
+          <span class="tag">Python</span><span class="tag">R</span><span class="tag">SQL</span>
+          <span class="tag">Bash</span><span class="tag">Docker</span><span class="tag">Git</span>
+          <span class="tag">AWS Lambda</span><span class="tag">AWS S3</span><span class="tag">AWS Bedrock</span>
+        </div>
+      </div>
+      <div class="sk-cat">
+        <div class="sk-title">ml &amp; deep learning</div>
+        <div class="sk-tags">
+          <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">scikit-learn</span>
+          <span class="tag">OpenCV</span><span class="tag">CNNs</span><span class="tag">YOLO</span>
+          <span class="tag">Transformers</span><span class="tag">GANs</span><span class="tag">ViT</span>
+          <span class="tag">XGBoost</span><span class="tag">Ensemble Methods</span>
+        </div>
+      </div>
+      <div class="sk-cat">
+        <div class="sk-title">generative ai</div>
+        <div class="sk-tags">
+          <span class="tag">LLM Fine-tuning</span><span class="tag">RAG Pipelines</span>
+          <span class="tag">LangChain</span><span class="tag">FAISS</span><span class="tag">ChromaDB</span>
+          <span class="tag">GPT</span><span class="tag">Claude</span><span class="tag">LLaMA</span>
+          <span class="tag">Prompt Engineering</span><span class="tag">Instruction Tuning</span>
+        </div>
+      </div>
+      <div class="sk-cat">
+        <div class="sk-title">data engineering</div>
+        <div class="sk-tags">
+          <span class="tag">Apache Kafka</span><span class="tag">Apache Airflow</span><span class="tag">PySpark</span>
+          <span class="tag">Snowflake</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span>
+          <span class="tag">Neo4j</span><span class="tag">Elasticsearch</span><span class="tag">ETL Pipelines</span>
+        </div>
+      </div>
+      <div class="sk-cat">
+        <div class="sk-title">visualization &amp; bi</div>
+        <div class="sk-tags">
+          <span class="tag">Tableau</span><span class="tag">Power BI</span><span class="tag">Streamlit</span>
+          <span class="tag">Matplotlib</span><span class="tag">Seaborn</span><span class="tag">ggplot2</span><span class="tag">Plotly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. EXPERIENCE -->
+<div class="win reveal">
+  <div class="tb">
+    <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
+    <div class="wt">experience.log — 3 entries</div>
+  </div>
+  <div class="pad">
+    <div class="pr">
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-sep">:</span><span class="pr-path">~/resume</span><span class="pr-git"> (main)</span><span class="pr-$">$</span>
+      <span class="pr-cmd">cat experience.log </span><span class="pr-flag">| grep -v</span><span class="pr-str"> "^#" </span><span class="pr-flag">| pretty-print</span>
+    </div>
+
+    <div class="xp-card">
+      <div class="xp-card-inner">
+        <div class="xp-hd">
           <div>
-            <div class="exp-company">Independent Consultant (Freelance)</div>
-            <div class="exp-role">Data Scientist</div>
+            <div class="xp-co"><a href="https://ojasvissar.github.io/og/" target="_blank">Independent Consultant</a></div>
+            <div class="xp-role">Data Scientist — Freelance</div>
           </div>
           <div>
-            <div class="exp-period">Jun 2022 – Present</div>
+            <div class="xp-period">Jun 2022 – Present</div>
           </div>
         </div>
-        <div class="exp-loc">📍 Remote</div>
-        <ul class="bullet-list">
-          <li>Delivered <strong>end-to-end ML systems</strong> for <strong>30+ clients</strong> — including EdTech platforms Escalera Technologies and TechLearniversity — across education, analytics, and e-commerce using deep learning, computer vision, NLP, and RAG pipelines.</li>
-          <li>Developed an <strong>Arabic sentiment analysis model</strong> using XLM-RoBERTa-large; web-scraped 15K+ Arabic reviews, fine-tuned via transfer learning, and deployed a production inference pipeline on multilingual customer feedback.</li>
-          <li>Engineered <strong>CNN/YOLO and transformer-based NLP models</strong> improving accuracy by up to <strong>30%</strong>; built ETL pipelines with Airflow, Kafka, and PySpark on Snowflake, PostgreSQL, and Neo4j with real-time Tableau/Power BI dashboards.</li>
-        </ul>
-      </div>
-
-      <div class="exp-card">
-        <div class="exp-header">
-          <div>
-            <div class="exp-company">Spartan Poker</div>
-            <div class="exp-role">Data Analyst Intern</div>
-          </div>
-          <div>
-            <div class="exp-period">Jan 2024 – Jun 2024</div>
-          </div>
-        </div>
-        <div class="exp-loc">📍 Gurugram, India</div>
-        <ul class="bullet-list">
-          <li>Designed the company's <strong>first game-theoretic tournament payout model</strong>, adopted across <strong>50K+ active players</strong>; reduced payout disputes and informed prize pool structuring for major events.</li>
-          <li>Built <strong>churn prediction models</strong> (gradient boosting, survival analysis) reducing attrition by up to <strong>30%</strong>; deployed anomaly detection fraud pipelines improving accuracy by <strong>60%</strong> over legacy rule-based systems.</li>
-          <li>Architected <strong>Snowflake data warehouse migration</strong> and QuickSight BI integration, cutting query latency by <strong>60%</strong> and enabling real-time operational analytics.</li>
+        <div class="xp-loc">📍 Remote · 30+ clients · 3.5+ yrs active</div>
+        <ul class="bullets">
+          <li>Delivered <strong>end-to-end ML systems</strong> for <strong>30+ clients</strong> — including EdTech platforms <a href="https://escaleratechnologies.com" target="_blank">Escalera Technologies</a> and <a href="https://techlearniversity.com" target="_blank">TechLearniversity</a> — across education, analytics, and e-commerce using deep learning, computer vision, NLP, and RAG pipelines.</li>
+          <li>Fine-tuned <strong>XLM-RoBERTa-large</strong> on a <strong>15K+ web-scraped Arabic review dataset</strong> via instruction tuning and domain adaptation; A/B benchmarked across F1 / precision-recall before deploying to <strong>AWS Bedrock</strong> production inference.</li>
+          <li>Built <strong>CNN/YOLO computer vision systems</strong> and transformer NLP models; engineered ETL pipelines with Airflow, Kafka, PySpark on Snowflake, PostgreSQL, Neo4j; delivered real-time <strong>Tableau and Power BI dashboards</strong>.</li>
         </ul>
       </div>
     </div>
-  </div>
 
-  <!-- Projects window -->
-  <div class="window">
-    <div class="titlebar">
-      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-      <div class="title-text">~/projects/</div>
-    </div>
-    <div class="content">
-      <div class="prompt" style="margin-bottom:20px;">
-        <span class="prompt-user">ojasv</span><span class="prompt-at">@</span><span class="prompt-host">devmachine</span><span class="prompt-at">:</span><span class="prompt-path">~/projects</span><span class="prompt-dollar">$</span>
-        <span class="prompt-cmd">ls -la --color=always</span>
-      </div>
-      <div class="projects-grid">
-
-        <div class="proj-card">
-          <div class="proj-name">📡 Reddit UBC Reporter</div>
-          <div class="proj-date">Jan 2026</div>
-          <div class="proj-stack">
-            <span>Python</span><span>AWS Lambda</span><span>SAM</span><span>Bedrock</span>
-            <span>Llama</span><span>Claude</span><span>EventBridge</span><span>S3</span>
+    <div class="xp-card">
+      <div class="xp-card-inner">
+        <div class="xp-hd">
+          <div>
+            <div class="xp-co"><a href="https://spartan-poker.com" target="_blank">Spartan Poker</a></div>
+            <div class="xp-role">Data Scientist Intern</div>
           </div>
-          <div class="proj-desc">Fully automated serverless pipeline with 4-function Lambda architecture (Fetcher, Analyzer, Summarizer, Emailer). Dual-model Bedrock inference — Llama for categorization, Claude for summarization — dispatching weekly r/UBC digests via automated email.</div>
+          <div><div class="xp-period">Jan 2024 – Jun 2024</div></div>
         </div>
-
-        <div class="proj-card">
-          <div class="proj-name">🌡 Climate Change Forecasting</div>
-          <div class="proj-date">Dec 2025</div>
-          <div class="proj-stack">
-            <span>Python</span><span>SVR</span><span>Random Forest</span>
-            <span>Linear Regression</span><span>Docker</span><span>Quarto</span>
-          </div>
-          <div class="proj-desc">Modeled 222 years of Berkeley Earth data (1800–2022), evaluating models across RMSE, MAE, and R². SVR projected 2030 temperatures at ~10.56°C — approximately 2°C above the 1951–1980 baseline.</div>
-        </div>
-
-        <div class="proj-card">
-          <div class="proj-name">☄ Asteroid Hazard Classifier</div>
-          <div class="proj-date">Nov 2025</div>
-          <div class="proj-stack">
-            <span>Python</span><span>XGBoost</span><span>Random Forest</span>
-            <span>SMOTENC</span><span>Feature Engineering</span>
-          </div>
-          <div class="proj-desc">Planetary defense classifier on 958,524 NASA/JPL asteroid records. Leveraged RFE and SMOTENC to address class imbalance; pinpointed eccentricity and perihelion distance as primary hazard predictors via chi-squared analysis and XGBoost importance scoring.</div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Education window -->
-  <div class="window">
-    <div class="titlebar">
-      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-      <div class="title-text">education.db</div>
-    </div>
-    <div class="content">
-      <div class="prompt" style="margin-bottom:20px;">
-        <span class="prompt-user">ojasv</span><span class="prompt-at">@</span><span class="prompt-host">devmachine</span><span class="prompt-at">:</span><span class="prompt-path">~/resume</span><span class="prompt-dollar">$</span>
-        <span class="prompt-cmd">sqlite3 education.db "SELECT * FROM degrees ORDER BY year DESC;"</span>
-      </div>
-
-      <div class="edu-card">
-        <div class="edu-school">University of British Columbia</div>
-        <div class="edu-degree">Master of Data Science (MDS)</div>
-        <div class="edu-period">📅 Sep 2025 – Jun 2026 &nbsp;|&nbsp; 📍 Vancouver, BC</div>
-        <ul class="bullet-list">
-          <li><strong>Graduate Teaching Assistant:</strong> CBTF Proctor — scaled operations from 22→31 courses (<strong>+41%</strong>), 155→263 exams (<strong>+70%</strong>), 4,298→6,094 students (<strong>+42%</strong>) in a single term; maintained secure delivery across <strong>38,000+ exams</strong>.</li>
+        <div class="xp-loc">📍 Gurugram, India</div>
+        <ul class="bullets">
+          <li>Designed company's first <strong>game-theoretic tournament payout model</strong> adopted across <strong>50K+ active players</strong>; churn prediction (gradient boosting + survival analysis) reducing attrition by <strong>30%</strong>; fraud anomaly detection improving accuracy by <strong>60%</strong>.</li>
+          <li>Architected <strong>Snowflake data warehouse</strong> migration with schema design and quality frameworks; real-time dashboards cutting query latency by <strong>60%</strong>.</li>
         </ul>
       </div>
+    </div>
 
-      <div class="edu-card">
-        <div class="edu-school">Symbiosis Institute of Technology</div>
-        <div class="edu-degree">B.Tech in Computer Science & Engineering, Honours: Data Science</div>
-        <div class="edu-period">📅 Aug 2020 – May 2024 &nbsp;|&nbsp; 📍 Pune, India</div>
-      </div>
-
-      <!-- Publications -->
-      <div class="section-cmd" style="margin-top:24px;">$ cat publications.bib</div>
-      <div class="pub-card">
-        <div class="pub-title">SneakerXchange: Enhancing User Experience through HCI Principles</div>
-        <div class="pub-venue">9th International Conference on Innovative Computing & Communication (ICICC 2026) &nbsp;|&nbsp; Springer Lecture Notes in Networks and Systems</div>
-        <div class="pub-badge">✓ Accepted — Top 15% acceptance rate</div>
+    <div class="xp-card">
+      <div class="xp-card-inner">
+        <div class="xp-hd">
+          <div>
+            <div class="xp-co"><a href="https://www.ubc.ca" target="_blank">University of British Columbia</a></div>
+            <div class="xp-role">Graduate Teaching Assistant · CBTF Proctor</div>
+          </div>
+          <div><div class="xp-period">Sep 2025 – Present</div></div>
+        </div>
+        <div class="xp-loc">📍 Vancouver, BC</div>
+        <ul class="bullets">
+          <li>Scaled CBTF from <strong>22 → 31 courses (+41%)</strong>, <strong>155 → 263 exams (+70%)</strong>, <strong>4,298 → 6,094 students (+42%)</strong> in one term; secure delivery across <strong>38,000+ exams</strong>.</li>
+        </ul>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Interactive terminal -->
-  <div class="window">
-    <div class="titlebar">
-      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-      <div class="title-text">interactive shell — try some commands!</div>
+<!-- 4. PROJECTS -->
+<div class="win reveal">
+  <div class="tb">
+    <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
+    <div class="wt">~/projects/ — ls -la</div>
+  </div>
+  <div class="pad">
+    <div class="pr">
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-sep">:</span><span class="pr-path">~/projects</span><span class="pr-git"> (main)</span><span class="pr-$">$</span>
+      <span class="pr-cmd">ls </span><span class="pr-flag">-la --color=always --sort=date</span>
     </div>
-    <div class="content">
-      <div class="prompt">
-        <span class="prompt-user">ojasv</span><span class="prompt-at">@</span><span class="prompt-host">devmachine</span><span class="prompt-at">:</span><span class="prompt-path">~/resume</span><span class="prompt-dollar">$</span>
-        <span class="prompt-cmd">bash --interactive</span>
+    <div class="pj-grid">
+      <div class="pj">
+        <div class="pj-top">
+          <div class="pj-num">drwxr-xr-x · 01</div>
+          <a href="https://github.com/Vin-dictive/ubc-reddit-reporter" target="_blank" class="pj-link-icon">↗</a>
+        </div>
+        <div class="pj-name"><a href="https://github.com/Vin-dictive/ubc-reddit-reporter" target="_blank">📡 Reddit UBC Reporter</a></div>
+        <div class="pj-date">Jan 2026 · serverless</div>
+        <div class="pj-stack"><span>AWS Lambda</span><span>Bedrock</span><span>Llama 3</span><span>Claude</span><span>EventBridge</span><span>S3</span></div>
+        <p class="pj-desc">Fully automated <strong>4-stage Lambda pipeline</strong> (Fetcher → Analyzer → Summarizer → Emailer). Dual-model Bedrock inference — Llama 3 categorizes, Claude summarizes — dispatching weekly r/UBC digests to <strong>100+ subscribers</strong>.</p>
       </div>
-      <div id="interactive">
-        <div id="output-area">
-          <div class="output-line info">Welcome to Ojasv's interactive resume shell. Type <span style="color:var(--amber)">help</span> for available commands.</div>
+      <div class="pj">
+        <div class="pj-top">
+          <div class="pj-num">drwxr-xr-x · 02</div>
+          <a href="https://github.com/ojasvissar/yield-forecasting-transformer" target="_blank" class="pj-link-icon">↗</a>
         </div>
-        <div class="terminal-input-row">
-          <span class="prompt-user">ojasv</span>
-          <span class="prompt-at">@</span>
-          <span class="prompt-host">devmachine</span>
-          <span style="color:var(--text-dim)">:</span>
-          <span class="prompt-path">~</span>
-          <span class="prompt-dollar">$</span>
-          <input id="cmd-input" type="text" autocomplete="off" spellcheck="false" autofocus placeholder="type a command..."/>
+        <div class="pj-name"><a href="https://github.com/ojasvissar/yield-forecasting-transformer" target="_blank">🌾 Geospatial Yield Transformer</a></div>
+        <div class="pj-date">Nov 2025 · computer vision</div>
+        <div class="pj-stack"><span>PyTorch</span><span>TorchGeo</span><span>ViT</span><span>ONNX</span><span>Grad-CAM</span></div>
+        <p class="pj-desc">Extended <strong>MMST-ViT</strong> for crop yield prediction — fusing satellite imagery with weather time-series. Grad-CAM attention visualization; ONNX export; benchmarked vs geospatial baselines.</p>
+      </div>
+      <div class="pj">
+        <div class="pj-top">
+          <div class="pj-num">drwxr-xr-x · 03</div>
+          <a href="https://github.com/harshil2sharma/Applying-Machine-Learning-Principles-to-Categorize-Asteroids-as-Hazardous-or-Non-Hazardous" target="_blank" class="pj-link-icon">↗</a>
         </div>
+        <div class="pj-name"><a href="https://github.com/harshil2sharma/Applying-Machine-Learning-Principles-to-Categorize-Asteroids-as-Hazardous-or-Non-Hazardous" target="_blank">☄️ Asteroid Hazard Classifier</a></div>
+        <div class="pj-date">Nov 2025 · classification</div>
+        <div class="pj-stack"><span>XGBoost</span><span>Random Forest</span><span>SMOTENC</span><span>NASA/JPL</span></div>
+        <p class="pj-desc">Planetary defense classifier on <strong>958,524 NASA/JPL records</strong>. SMOTENC for class imbalance; RFE + chi-squared feature selection; XGBoost vs RF benchmarked across <strong>F1, precision, recall</strong>.</p>
       </div>
     </div>
   </div>
+</div>
 
+<!-- 5. EDUCATION + PUB -->
+<div class="win reveal">
+  <div class="tb">
+    <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
+    <div class="wt">education.db · publications.bib</div>
+  </div>
+  <div class="pad">
+    <div class="pr">
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-sep">:</span><span class="pr-path">~/resume</span><span class="pr-$">$</span>
+      <span class="pr-cmd">sqlite3 education.db </span><span class="pr-str">"SELECT * FROM degrees ORDER BY year DESC;"</span>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-school"><a href="https://www.ubc.ca" target="_blank">University of British Columbia</a></div>
+      <div class="edu-deg">Master of Data Science (MDS)</div>
+      <div class="edu-period">📅 Sep 2025 – Jun 2026 &nbsp;|&nbsp; 📍 Vancouver, BC</div>
+      <ul class="bullets">
+        <li><strong>Graduate Teaching Assistant:</strong> CBTF Proctor — scaled 22→31 courses (<strong>+41%</strong>), 155→263 exams (<strong>+70%</strong>), 4,298→6,094 students (<strong>+42%</strong>); secure delivery across <strong>38,000+ exams</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-school"><a href="https://www.sitpune.edu.in" target="_blank">Symbiosis Institute of Technology</a></div>
+      <div class="edu-deg">B.Tech Computer Science &amp; Engineering · Honours: Data Science</div>
+      <div class="edu-period">📅 Aug 2020 – May 2024 &nbsp;|&nbsp; 📍 Pune, India</div>
+    </div>
+
+    <div class="sc-div" style="margin-top:20px">$ cat publications.bib</div>
+    <div class="pub">
+      <div class="pub-t"><a href="https://drive.google.com/file/d/1u5fChjDuCSWPc7wncFE1oBx70qQk3sK9/view" target="_blank">SneakerXchange: Enhancing User Experience through HCI Principles</a></div>
+      <div class="pub-v">9th International Conference on Innovative Computing &amp; Communication (ICICC 2026) · Springer Lecture Notes in Networks and Systems</div>
+      <div class="pub-badge">✓ Accepted · Top 15% acceptance rate</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. INTERACTIVE SHELL -->
+<div class="win reveal">
+  <div class="tb">
+    <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
+    <div class="wt">interactive — try: help · whoami · hire · theme · matrix · contact</div>
+  </div>
+  <div class="pad">
+    <div class="pr">
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-$">$</span>
+      <span class="pr-cmd">bash </span><span class="pr-flag">--interactive</span><span class="pr-cmd"> resume.sh</span>
+    </div>
+    <div class="sh-out" id="sh-out">
+      <div class="sh-line g">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+      <div class="sh-line c">  Welcome to ojasv's interactive resume shell v3.0</div>
+      <div class="sh-line g">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+      <div class="sh-line d">  Type <span style="color:var(--am)">help</span> for available commands · ↑↓ for history</div>
+    </div>
+    <div class="sh-input-row">
+      <span class="pr-u" style="user-select:none">ojasv</span>
+      <span class="pr-at" style="user-select:none">@</span>
+      <span class="pr-h" style="user-select:none">ubc-mds</span>
+      <span class="pr-sep" style="user-select:none">:</span>
+      <span class="pr-path" style="user-select:none">~</span>
+      <span class="pr-$" style="user-select:none">$</span>
+      <input id="cmd" type="text" autocomplete="off" spellcheck="false" placeholder="type a command..."/>
+    </div>
+  </div>
+</div>
+
+</div><!-- #main -->
+
+<!-- ══════ THEME PICKER ══════ -->
+<div id="theme-picker">
+  <div id="theme-panel">
+    <div class="tp-title">shell colour</div>
+    <div class="tp-swatches">
+      <div class="tp-swatch active" data-t="green" onclick="setTheme('green',this)">
+        <div class="tp-dot" style="background:#00FF9F;color:#00FF9F"></div>
+        <div class="tp-label">phosphor</div>
+      </div>
+      <div class="tp-swatch" data-t="amber" onclick="setTheme('amber',this)">
+        <div class="tp-dot" style="background:#FFB300;color:#FFB300"></div>
+        <div class="tp-label">amber</div>
+      </div>
+      <div class="tp-swatch" data-t="cyan" onclick="setTheme('cyan',this)">
+        <div class="tp-dot" style="background:#00EEFF;color:#00EEFF"></div>
+        <div class="tp-label">ice</div>
+      </div>
+      <div class="tp-swatch" data-t="red" onclick="setTheme('red',this)">
+        <div class="tp-dot" style="background:#FF3344;color:#FF3344"></div>
+        <div class="tp-label">danger</div>
+      </div>
+      <div class="tp-swatch" data-t="purple" onclick="setTheme('purple',this)">
+        <div class="tp-dot" style="background:#CC44FF;color:#CC44FF"></div>
+        <div class="tp-label">synth</div>
+      </div>
+      <div class="tp-swatch" data-t="blue" onclick="setTheme('blue',this)">
+        <div class="tp-dot" style="background:#4488FF;color:#4488FF"></div>
+        <div class="tp-label">ocean</div>
+      </div>
+      <div class="tp-swatch" data-t="white" onclick="setTheme('white',this)" style="grid-column:1/-1">
+        <div class="tp-dot" style="background:#1A7F4A;color:#1A7F4A;width:100%;border-radius:4px;height:14px"></div>
+        <div class="tp-label">paper (light mode)</div>
+      </div>
+    </div>
+    <div class="tp-cmd">or type <span>theme &lt;name&gt;</span> in shell</div>
+  </div>
+  <div id="theme-toggle" onclick="togglePicker()" title="Change shell colour">🎨</div>
 </div>
 
 <script>
-// Boot sequence
-const bootLines = [
-  { text: 'Initializing ojasv-resume v2.0.0...', delay: 200, ok: true },
-  { text: 'Loading ML modules [PyTorch, TensorFlow, scikit-learn]', delay: 400, ok: true },
-  { text: 'Mounting data pipelines [Kafka, Airflow, Spark]', delay: 600, ok: true },
-  { text: 'Connecting to AWS [Lambda, S3, Bedrock]', delay: 800, ok: true },
-  { text: 'Spinning up vector databases [FAISS, ChromaDB]', delay: 1000, ok: true },
-  { text: 'Loading 3.5 years of experience...', delay: 1200, ok: true },
-  { text: 'System ready. Launching resume.sh', delay: 1600, ok: false },
-];
+/* ════════ THEME SYSTEM ════════ */
+const THEMES={
+  green:  {name:'Phosphor Green', p:'#00FF9F'},
+  amber:  {name:'Amber CRT',      p:'#FFB300'},
+  cyan:   {name:'Ice / Cyan',     p:'#00EEFF'},
+  red:    {name:'Danger Red',     p:'#FF3344'},
+  purple: {name:'Synthwave',      p:'#CC44FF'},
+  blue:   {name:'Ocean Blue',     p:'#4488FF'},
+  white:  {name:'Paper (Light)',  p:'#1A7F4A'},
+};
+function setTheme(name, el){
+  // apply to html element
+  const html=document.documentElement;
+  if(name==='green') html.removeAttribute('data-theme');
+  else html.setAttribute('data-theme',name);
+  // update active swatch
+  document.querySelectorAll('.tp-swatch').forEach(s=>s.classList.remove('active'));
+  if(el) el.classList.add('active');
+  // persist
+  localStorage.setItem('oj-theme',name);
+  // update matrix colour
+  updateMatrixColor(name);
+}
+function updateMatrixColor(name){
+  // store current theme for matrix draw
+  window.__termTheme=name;
+}
+function togglePicker(){
+  document.getElementById('theme-panel').classList.toggle('open');
+}
+// close picker on outside click
+document.addEventListener('click',e=>{
+  const picker=document.getElementById('theme-picker');
+  if(!picker.contains(e.target)) document.getElementById('theme-panel').classList.remove('open');
+});
+// restore saved theme
+(function(){
+  const saved=localStorage.getItem('oj-theme')||'green';
+  if(saved!=='green'){
+    const swatch=document.querySelector(`.tp-swatch[data-t="${saved}"]`);
+    setTheme(saved,swatch);
+  }
+  window.__termTheme=saved;
+})();
 
-const bootContainer = document.getElementById('boot-lines');
-bootLines.forEach(line => {
-  setTimeout(() => {
-    const el = document.createElement('div');
-    el.className = 'boot-line' + (line.ok ? ' ok' : '');
-    el.textContent = '[ LOG ] ' + line.text;
-    bootContainer.appendChild(el);
-  }, line.delay);
+/* ════════ MATRIX RAIN ════════ */
+(function(){
+  const c=document.getElementById('matrix-canvas');
+  const ctx=c.getContext('2d');
+  let W,H,cols,drops;
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*(){}[]<>?/\\|~`ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵ';
+  const themeColors={
+    green:'#00FF9F', amber:'#FFB300', cyan:'#00EEFF',
+    red:'#FF3344', purple:'#CC44FF', blue:'#4488FF', white:'#1A7F4A'
+  };
+  function getColor(){return themeColors[window.__termTheme||'green']||'#00FF9F'}
+  function init(){
+    W=c.width=window.innerWidth;
+    H=c.height=window.innerHeight;
+    cols=Math.floor(W/14);
+    drops=Array.from({length:cols},()=>Math.random()*H/14*-1);
+  }
+  init();
+  window.addEventListener('resize',init);
+  function hexToRgb(h){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`${r},${g},${b}`}
+  function draw(){
+    const col=getColor();
+    const rgb=hexToRgb(col);
+    ctx.fillStyle=`rgba(${document.documentElement.dataset.theme==='white'?'245,245,240':'0,0,0'},0.055)`;
+    ctx.fillRect(0,0,W,H);
+    ctx.font='13px JetBrains Mono,monospace';
+    drops.forEach((y,i)=>{
+      const ch=chars[Math.floor(Math.random()*chars.length)];
+      const bright=Math.random();
+      if(bright>.97) ctx.fillStyle=`rgba(255,255,255,0.9)`;
+      else if(bright>.9) ctx.fillStyle=`rgba(${rgb},0.9)`;
+      else ctx.fillStyle=`rgba(${rgb},0.6)`;
+      ctx.fillText(ch,i*14,y*14);
+      if(y*14>H && Math.random()>.975) drops[i]=0;
+      drops[i]+=.5+Math.random()*.5;
+    });
+  }
+  setInterval(draw,55);
+})();
+
+/* ════════ BOOT SEQUENCE ════════ */
+const bootData=[
+  {t:'BIOS v2.09  |  POST complete',s:'ok',d:100},
+  {t:'Detecting hardware — 32GB RAM · NVMe SSD',s:'ok',d:200},
+  {t:'Loading kernel: DataScienceOS 3.5 LTS',s:'ok',d:380},
+  {t:'Mounting /proc/experience (3.5 yrs, 30+ clients)',s:'ok',d:560},
+  {t:'Initializing ML modules — PyTorch · TensorFlow · scikit-learn',s:'ok',d:720},
+  {t:'Connecting data pipelines — Kafka · Airflow · PySpark · Snowflake',s:'ok',d:920},
+  {t:'Provisioning cloud — AWS Lambda · S3 · Bedrock · EventBridge',s:'ok',d:1100},
+  {t:'Spinning up vector stores — FAISS · ChromaDB · Elasticsearch',s:'ok',d:1280},
+  {t:'Loading NLP models — XLM-RoBERTa · BERT · LLaMA · Claude',s:'ok',d:1460},
+  {t:'Configuring identity — ojasv@ubc-mds',s:'ok',d:1680},
+  {t:'Running diagnostics...',s:'ok',d:1920},
+  {t:'WARNING: 30+ undeployed client projects found in backlog',s:'warn',d:2120},
+  {t:'All systems operational — launching resume.sh',s:'ok',d:2400},
+];
+const bl=document.getElementById('blog');
+bootData.forEach(({t,s,d})=>{
+  setTimeout(()=>{
+    const el=document.createElement('div');
+    el.className='bl';
+    el.innerHTML=`<span>${t}</span><span class="${s}">${s==='ok'?'[  OK  ]':s==='warn'?'[ WARN ]':'[ FAIL ]'}</span>`;
+    bl.appendChild(el);
+    bl.scrollTop=bl.scrollHeight;
+  },d);
 });
 
-// Interactive shell commands
-const commands = {
-  help: () => [
-    { cls: 'info', t: 'Available commands:' },
-    { cls: '', t: '  skills       — list technical skills' },
-    { cls: '', t: '  experience   — show work history' },
-    { cls: '', t: '  projects     — list key projects' },
-    { cls: '', t: '  education    — academic background' },
-    { cls: '', t: '  contact      — get in touch' },
-    { cls: '', t: '  whoami       — about ojasv' },
-    { cls: '', t: '  hire         — reasons to hire' },
-    { cls: '', t: '  clear        — clear this terminal' },
-  ],
-  whoami: () => [
-    { cls: 'success', t: 'Ojasv Issar — Data Scientist & ML Engineer' },
-    { cls: '', t: 'Location   : Vancouver, BC (UBC MDS Student)' },
-    { cls: '', t: 'Experience : 3.5+ years | 30+ clients' },
-    { cls: '', t: 'Specialties: NLP · Computer Vision · RAG · MLOps' },
-    { cls: '', t: 'Status     : Open to full-time opportunities' },
-  ],
-  skills: () => [
-    { cls: 'amber', t: 'LANGUAGES  : Python, R, SQL' },
-    { cls: 'amber', t: 'ML/DL      : PyTorch, TensorFlow, Transformers, CNNs, YOLO, GANs' },
-    { cls: 'amber', t: 'GEN AI     : GPT, Claude, Mistral, RAG, Vector Search, Prompting' },
-    { cls: 'amber', t: 'DATA ENG   : Kafka, Airflow, PySpark, Snowflake, Neo4j, FAISS' },
-    { cls: 'amber', t: 'CLOUD      : AWS (Lambda, S3, Bedrock), Docker' },
-    { cls: 'amber', t: 'VIZ        : Tableau, Power BI, Matplotlib, ggplot2' },
-  ],
-  experience: () => [
-    { cls: 'success', t: '① Freelance Data Scientist (Jun 2022 – Present)' },
-    { cls: '', t: '   → 30+ clients, Arabic NLP, CNN/YOLO, ETL pipelines' },
-    { cls: 'success', t: '② Spartan Poker — Data Analyst Intern (Jan–Jun 2024)' },
-    { cls: '', t: '   → Game-theory models, 50K+ players, churn ↓30%, fraud ↑60%' },
-  ],
-  projects: () => [
-    { cls: 'info', t: '📡 Reddit UBC Reporter — AWS Lambda serverless pipeline (Jan 2026)' },
-    { cls: 'info', t: '🌡  Climate Forecasting  — 222yr Berkeley Earth data, SVR (Dec 2025)' },
-    { cls: 'info', t: '☄  Asteroid Classifier  — 958K NASA records, XGBoost (Nov 2025)' },
-  ],
-  education: () => [
-    { cls: 'success', t: '🎓 UBC — Master of Data Science (Sep 2025 – Jun 2026)' },
-    { cls: '', t: '   TA: Scaled exam operations +41% courses, +70% exams, +42% students' },
-    { cls: 'success', t: '🎓 SIT Pune — B.Tech CS (Data Science Honours, Aug 2020 – May 2024)' },
-    { cls: '', t: '   Publication: ICICC 2026, Top 15% acceptance, Springer LNNS' },
-  ],
-  contact: () => [
-    { cls: 'info', t: '📱 Phone    : +1-604-831-5490' },
-    { cls: 'info', t: '✉  Email    : ojasvissar4@gmail.com' },
-    { cls: 'info', t: '🔗 LinkedIn : linkedin.com/in/ojasvissar' },
-    { cls: 'info', t: '⌥  GitHub   : github.com/ojasvissar' },
-  ],
-  hire: () => [
-    { cls: 'success', t: '🚀 Why hire Ojasv?' },
-    { cls: '', t: '  ✓ Ships production-ready ML systems, not just notebooks' },
-    { cls: '', t: '  ✓ Full-stack: data → model → pipeline → deployment → dashboard' },
-    { cls: '', t: '  ✓ 30+ real-world clients across EdTech, Fintech, E-commerce' },
-    { cls: '', t: '  ✓ Proven with LLMs, RAG, transformers, and distributed systems' },
-    { cls: '', t: '  ✓ Published researcher + active grad student at UBC' },
-    { cls: 'success', t: '→ Run `contact` to reach out!' },
-  ],
-  clear: () => '__clear__',
+/* ════════ SCROLL REVEALS ════════ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}
+}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ════════ PROGRESS BARS ════════ */
+const pio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.querySelectorAll('.prog-fill').forEach(f=>{
+      setTimeout(()=>{f.style.width=f.dataset.w+'%'},100);
+    });
+    pio.unobserve(e.target);
+  }
+}),{threshold:.3});
+const progParent=document.getElementById('prog-rows');
+if(progParent)pio.observe(progParent);
+
+/* ════════ INTERACTIVE SHELL ════════ */
+const inp=document.getElementById('cmd');
+const out=document.getElementById('sh-out');
+let history=[],histIdx=-1;
+
+// click anywhere in terminal focuses input
+document.querySelectorAll('.win').forEach(w=>w.addEventListener('click',()=>inp.focus()));
+
+function pr(txt,cls=''){
+  const d=document.createElement('div');
+  d.className='sh-line '+(cls||'');
+  d.innerHTML=txt;
+  out.appendChild(d);
+  d.scrollIntoView({block:'nearest'});
+}
+function echoCmd(cmd){
+  pr(`<span style="color:var(--p)">ojasv</span><span style="color:var(--txt2)">@ubc-mds</span><span style="color:var(--txt2)">:</span><span style="color:var(--am)">~</span><span style="color:var(--txt1)"> $ </span><span>${cmd}</span>`);
+}
+
+const cmds={
+  help(){
+    pr('','');
+    pr('┌─────────────────────────────────────────────────────┐','g');
+    pr('│           available commands                        │','g');
+    pr('├─────────────────────────────────────────────────────┤','g');
+    const list=[
+      ['whoami    ','about ojasv'],
+      ['skills    ','list technical stack'],
+      ['experience','work history'],
+      ['projects  ','key projects'],
+      ['education ','academic background'],
+      ['contact   ','get in touch'],
+      ['hire      ','reasons to hire'],
+      ['neofetch  ','system info'],
+      ['theme     ','change shell colour (try: theme amber)'],
+      ['matrix    ','toggle matrix rain'],
+      ['date      ','current datetime'],
+      ['uname     ','system info'],
+      ['clear     ','clear terminal'],
+    ];
+    list.forEach(([k,v])=>pr(`│  <span style="color:var(--am)">${k}</span>  <span style="color:var(--txt1)">—  ${v}</span>               │`));
+    pr('└─────────────────────────────────────────────────────┘','g');
+    pr('  use ↑↓ to cycle command history','d');
+    pr('','');
+  },
+  whoami(){
+    pr('','');
+    pr(' ██████╗      ██╗ █████╗ ███████╗██╗   ██╗','g');
+    pr('██╔═══██╗     ██║██╔══██╗██╔════╝██║   ██║','g');
+    pr('██║   ██║     ██║███████║███████╗██║   ██║','g');
+    pr('██║   ██║██   ██║██╔══██║╚════██║╚██╗ ██╔╝','g');
+    pr('╚██████╔╝╚█████╔╝██║  ██║███████║ ╚████╔╝','g');
+    pr(' ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝  ╚═══╝','g');
+    pr('','');
+    pr('<span style="color:var(--am)">name        </span><span style="color:var(--txt1)">:</span> Ojasv Issar');
+    pr('<span style="color:var(--am)">role        </span><span style="color:var(--txt1)">:</span> <span style="color:var(--p)">Data Scientist &amp; ML Engineer</span>');
+    pr('<span style="color:var(--am)">education   </span><span style="color:var(--txt1)">:</span> Master of Data Science @ UBC (Jun 2026)');
+    pr('<span style="color:var(--am)">experience  </span><span style="color:var(--txt1)">:</span> 3.5+ years | 30+ clients delivered');
+    pr('<span style="color:var(--am)">location    </span><span style="color:var(--txt1)">:</span> Vancouver, BC, Canada');
+    pr('<span style="color:var(--am)">specialties </span><span style="color:var(--txt1)">:</span> NLP · Computer Vision · RAG · MLOps · GenAI');
+    pr('<span style="color:var(--am)">published   </span><span style="color:var(--txt1)">:</span> ICICC 2026 · Springer LNNS · Top 15% acceptance');
+    pr('<span style="color:var(--am)">status      </span><span style="color:var(--txt1)">:</span> <span style="color:var(--p)">● OPEN TO WORK — full-time from June 2026</span>');
+    pr('','');
+  },
+  skills(){
+    pr('','');
+    pr('<span style="color:var(--am)">LANGUAGES</span>   Python · R · SQL · Bash');
+    pr('<span style="color:var(--am)">ML / DL</span>     PyTorch · TensorFlow · scikit-learn · XGBoost · YOLO · ViT · GANs');
+    pr('<span style="color:var(--am)">GEN AI</span>      LLM Fine-tuning · RAG · LangChain · FAISS · LLaMA · Claude');
+    pr('<span style="color:var(--am)">DATA ENG</span>    Kafka · Airflow · PySpark · Snowflake · Neo4j · Elasticsearch');
+    pr('<span style="color:var(--am)">CLOUD</span>       AWS Lambda · S3 · Bedrock · EC2 · EventBridge · Docker');
+    pr('<span style="color:var(--am)">VIZ / BI</span>    Tableau · Power BI · Streamlit · Matplotlib · ggplot2');
+    pr('','');
+  },
+  experience(){
+    pr('','');
+    pr('→ <span style="color:var(--p)">Independent Consultant</span>  <span style="color:var(--txt1)">Jun 2022 – Present · Remote</span>','');
+    pr('  role: <span style="color:var(--cy)">Data Scientist — Freelance</span>');
+    pr('  30+ clients · CNN/YOLO · XLM-RoBERTa · RAG · AWS Bedrock','d');
+    pr('','');
+    pr('→ <span style="color:var(--p)">Spartan Poker</span>  <span style="color:var(--txt1)">Jan–Jun 2024 · Gurugram, India</span>');
+    pr('  role: <span style="color:var(--cy)">Data Scientist Intern</span>');
+    pr('  50K+ players · churn ↓30% · fraud detection ↑60% · Snowflake DW','d');
+    pr('','');
+    pr('→ <span style="color:var(--p)">University of British Columbia</span>  <span style="color:var(--txt1)">Sep 2025 – Present · Vancouver</span>');
+    pr('  role: <span style="color:var(--cy)">Graduate TA · CBTF Proctor</span>');
+    pr('  courses ↑41% · exams ↑70% · students ↑42% · 38K+ exams secured','d');
+    pr('','');
+  },
+  projects(){
+    pr('','');
+    pr('<span style="color:var(--am)">total 3 entries</span>','');
+    pr('','');
+    pr('📡 <span style="color:var(--p)">Reddit UBC Reporter</span>  <span style="color:var(--txt1)">[Jan 2026]</span>');
+    pr('   AWS Lambda · Bedrock · Llama 3 · Claude · EventBridge · S3','d');
+    pr('   Serverless 4-stage pipeline dispatching weekly r/UBC digests to 100+ subs','');
+    pr('','');
+    pr('🌾 <span style="color:var(--p)">Geospatial Yield Forecasting Transformer</span>  <span style="color:var(--txt1)">[Nov 2025]</span>');
+    pr('   PyTorch · TorchGeo · ViT · ONNX · Grad-CAM','d');
+    pr('   MMST-ViT extended with satellite + weather fusion; Grad-CAM viz + ONNX export','');
+    pr('','');
+    pr('☄️  <span style="color:var(--p)">Asteroid Hazard Classifier</span>  <span style="color:var(--txt1)">[Nov 2025]</span>');
+    pr('   XGBoost · Random Forest · SMOTENC · NASA/JPL','d');
+    pr('   958,524 records · RFE + chi-squared · F1/precision/recall benchmarks','');
+    pr('','');
+  },
+  education(){
+    pr('','');
+    pr('🎓 <span style="color:var(--p)">University of British Columbia</span>');
+    pr('   Master of Data Science  |  Sep 2025 – Jun 2026  |  Vancouver, BC');
+    pr('   TA: +41% courses · +70% exams · +42% students · 38K+ exams secured','d');
+    pr('','');
+    pr('🎓 <span style="color:var(--p)">Symbiosis Institute of Technology</span>');
+    pr('   B.Tech CS &amp; Engineering  |  Data Science Honours  |  Aug 2020–May 2024');
+    pr('','');
+    pr('📄 <span style="color:var(--am)">Publication — ICICC 2026 · Springer LNNS</span>');
+    pr('   "SneakerXchange: Enhancing UX through HCI Principles"','d');
+    pr('   <span style="color:var(--p)">✓ Accepted — Top 15% acceptance rate</span>');
+    pr('','');
+  },
+  contact(){
+    pr('','');
+    pr('📱 <span style="color:var(--am)">phone    </span> <a href="tel:+16048315490" style="color:var(--cy)">+1-604-831-5490</a>');
+    pr('✉  <span style="color:var(--am)">email    </span> <a href="mailto:ojasvissar4@gmail.com" style="color:var(--cy)">ojasvissar4@gmail.com</a>');
+    pr('🔗 <span style="color:var(--am)">linkedin </span> <a href="https://linkedin.com/in/ojasvissar" target="_blank" style="color:var(--cy)">linkedin.com/in/ojasvissar</a>');
+    pr('⌥  <span style="color:var(--am)">github   </span> <a href="https://github.com/ojasvissar" target="_blank" style="color:var(--cy)">github.com/ojasvissar</a>');
+    pr('🌐 <span style="color:var(--am)">portfolio</span> <a href="https://ojasvissar.github.io/og/" target="_blank" style="color:var(--cy)">ojasvissar.github.io/og/</a>');
+    pr('','');
+  },
+  hire(){
+    pr('','');
+    pr('┌──────────────────────────────────────────────────┐','g');
+    pr('│         reasons to hire ojasv                    │','g');
+    pr('├──────────────────────────────────────────────────┤','g');
+    pr('│  ✓  Ships production-ready ML — not just notebks │','g');
+    pr('│  ✓  Full-stack: data→model→pipeline→deploy→viz   │','g');
+    pr('│  ✓  30+ real clients · EdTech · Fintech · E-comm │','g');
+    pr('│  ✓  Proven: LLMs, RAG, transformers, dist. sys   │','g');
+    pr('│  ✓  Published researcher + UBC MDS grad student  │','g');
+    pr('│  ✓  50K+ players modelled · 38K+ exams secured   │','g');
+    pr('│  ✓  Open to full-time from June 2026             │','g');
+    pr('└──────────────────────────────────────────────────┘','g');
+    pr('  → run <span style="color:var(--am)">contact</span> to reach out','d');
+    pr('','');
+  },
+  neofetch(){
+    pr('','');
+    pr('  ██████╗ ██╗              <span style="color:var(--p)">ojasv</span><span style="color:var(--txt1)">@</span><span style="color:var(--cy)">ubc-mds</span>','');
+    pr(' ██╔═══██╗██║              ──────────────────────────','g');
+    pr(' ██║   ██║██║              <span style="color:var(--am)">OS:</span> DataScienceOS 3.5 LTS x86_64','');
+    pr(' ██║   ██║██║              <span style="color:var(--am)">Shell:</span> PyTorch 2.x + AWS Bedrock','');
+    pr(' ╚██████╔╝██║              <span style="color:var(--am)">Uptime:</span> 3.5+ years, 30+ clients','');
+    pr('  ╚═════╝ ╚═╝              <span style="color:var(--am)">CPU:</span> 50K+ players modelled','');
+    pr('                           <span style="color:var(--am)">Memory:</span> 958,524 NASA/JPL records','');
+    pr('                           <span style="color:var(--am)">Status:</span> <span style="color:var(--p)">● OPEN TO WORK</span>','');
+    pr('','');
+  },
+  date(){
+    const now=new Date();
+    pr(`<span style="color:var(--p)">${now.toString()}</span>`);
+  },
+  uname(){
+    pr('<span style="color:var(--p)">DataScienceOS</span> ubc-mds 3.5.0-LTS #1 SMP JetBrainsMono amd64 GNU/Linux');
+  },
+  matrix(){
+    const canvas=document.getElementById('matrix-canvas');
+    const cur=parseFloat(window.getComputedStyle(canvas).opacity);
+    const next=cur>.02?.01:.045;
+    canvas.style.transition='opacity .5s';
+    canvas.style.opacity=next;
+    pr(next>.02?'matrix: <span style="color:var(--p)">enabled</span>':'matrix: <span style="color:var(--txt1)">disabled</span>');
+  },
+  clear(){
+    out.innerHTML='';
+    pr('<span style="color:var(--txt1)">terminal cleared.</span>');
+  },
+  theme(arg){
+    const names=Object.keys(THEMES);
+    if(!arg){
+      pr('','');
+      pr('<span style="color:var(--am)">usage:</span>  theme &lt;name&gt;','');
+      pr('<span style="color:var(--am)">themes:</span>','');
+      names.forEach(n=>{
+        const cur=(localStorage.getItem('oj-theme')||'green')===n;
+        pr(`  <span style="color:var(--p)">${n.padEnd(8)}</span>  ${THEMES[n].name}${cur?' <span style="color:var(--am)">← active</span>':''}`);
+      });
+      pr('','');
+      return;
+    }
+    if(!THEMES[arg]){
+      pr(`<span style="color:var(--rd)">theme: unknown: "${arg}"</span>. Available: ${names.join(', ')}`, '');
+      return;
+    }
+    const swatch=document.querySelector(`.tp-swatch[data-t="${arg}"]`);
+    setTheme(arg, swatch);
+    pr(`<span style="color:var(--p)">theme set to:</span> ${THEMES[arg].name}`);
+    pr(`<span style="color:var(--txt1)">tip: run <span style="color:var(--am)">theme</span> to see all options</span>`,'');
+  },
 };
 
-const input = document.getElementById('cmd-input');
-const output = document.getElementById('output-area');
-
-function addLine(text, cls = '') {
-  const line = document.createElement('div');
-  line.className = 'output-line ' + cls;
-  line.innerHTML = text;
-  output.appendChild(line);
-  output.scrollIntoView({ behavior: 'smooth', block: 'end' });
-}
-
-function echoPrompt(cmd) {
-  const row = document.createElement('div');
-  row.className = 'output-line';
-  row.innerHTML = `<span style="color:var(--green)">ojasv</span><span style="color:var(--text-dim)">@devmachine</span><span style="color:var(--text-dim)">:</span><span style="color:var(--amber)">~</span><span style="color:var(--text-dim)">$ </span><span>${cmd}</span>`;
-  output.appendChild(row);
-}
-
-input.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const cmd = input.value.trim().toLowerCase();
-  input.value = '';
-  if (!cmd) return;
-
-  echoPrompt(cmd);
-
-  if (cmd in commands) {
-    const result = commands[cmd]();
-    if (result === '__clear__') {
-      output.innerHTML = '';
-      addLine('Terminal cleared.', 'dim');
-    } else {
-      result.forEach(r => addLine(r.t, r.cls || ''));
+// input handler with history
+inp.addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp'){
+    e.preventDefault();
+    if(history.length){
+      histIdx=Math.max(0,histIdx===-1?history.length-1:histIdx-1);
+      inp.value=history[histIdx];
     }
-  } else {
-    addLine(`bash: command not found: <span style="color:var(--red)">${cmd}</span>. Type <span style="color:var(--amber)">help</span> for commands.`, 'error');
+  } else if(e.key==='ArrowDown'){
+    e.preventDefault();
+    if(histIdx!==-1){
+      histIdx++;
+      inp.value=histIdx>=history.length?(histIdx=-1,''):history[histIdx];
+    }
+  } else if(e.key==='Enter'){
+    const raw=inp.value.trim();
+    inp.value=''; histIdx=-1;
+    if(!raw)return;
+    history.push(raw);
+    echoCmd(raw);
+    const key=raw.toLowerCase().split(' ')[0];
+    const arg=raw.toLowerCase().split(' ')[1];
+    if(cmds[key]){
+      cmds[key](arg);
+    } else if(raw.toLowerCase()==='sudo hire ojasv'){
+      pr('<span style="color:var(--rd)">sudo: this action requires: exceptional_taste && good_judgment</span>','');
+      pr('<span style="color:var(--p)">... both detected. ✓ hire initiated.</span>');
+    } else {
+      pr(`<span style="color:var(--rd)">bash: command not found: ${raw}</span><span style="color:var(--txt1)"> — type <span style="color:var(--am)">help</span> for commands</span>`,'');
+    }
   }
 });
+
+// auto-focus on any click
+document.addEventListener('click',()=>inp.focus());
+inp.focus();
 </script>
 </body>
 </html>
