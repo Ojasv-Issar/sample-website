@@ -4,22 +4,22 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ojasv@ubc:~ $ ./resume.sh</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 /* ════════════════════════════════════════
    TOKENS
 ════════════════════════════════════════ */
 :root {
-  --p:    #00FF9F;   /* phosphor */
+  --p:    #00FF9F;
   --p1:   #00CC7A;
   --p2:   #008C52;
   --p3:   #004d2e;
   --pg:   rgba(0,255,159,.12);
   --pg2:  rgba(0,255,159,.06);
   --pg3:  rgba(0,255,159,.03);
-  --am:   #FFB700;   /* amber accent */
+  --am:   #FFB700;
   --am2:  rgba(255,183,0,.08);
-  --cy:   #00D4FF;   /* cyan */
+  --cy:   #00D4FF;
   --cy2:  rgba(0,212,255,.08);
   --rd:   #FF4757;
   --bg:   #030907;
@@ -31,149 +31,66 @@
   --txt2: #2d5038;
   --br:   rgba(0,255,159,.14);
   --br2:  rgba(0,255,159,.22);
+  --glow: 0 0 60px rgba(0,255,159,.08);
+  --glow2: 0 0 120px rgba(0,255,159,.05);
 }
-/* ════════════════════════════════════════
-   THEMES — override :root vars per theme
-════════════════════════════════════════ */
 
-/* AMBER — warm amber phosphor CRT */
+/* ════════════════════════════════════════
+   THEMES
+════════════════════════════════════════ */
 [data-theme="amber"] {
-  --p:    #FFB300;
-  --p1:   #E09800;
-  --p2:   #996600;
-  --p3:   #553800;
-  --pg:   rgba(255,179,0,.12);
-  --pg2:  rgba(255,179,0,.06);
-  --pg3:  rgba(255,179,0,.03);
-  --am:   #FF8C00;
-  --am2:  rgba(255,140,0,.08);
-  --cy:   #FFD080;
-  --cy2:  rgba(255,208,128,.08);
-  --bg:   #0A0700;
-  --bg1:  #110C00;
-  --bg2:  #1A1200;
-  --bg3:  #221800;
-  --txt:  #FFDD99;
-  --txt1: #996633;
-  --txt2: #553311;
-  --br:   rgba(255,179,0,.14);
-  --br2:  rgba(255,179,0,.28);
+  --p:#FFB300;--p1:#E09800;--p2:#996600;--p3:#553800;
+  --pg:rgba(255,179,0,.12);--pg2:rgba(255,179,0,.06);--pg3:rgba(255,179,0,.03);
+  --am:#FF8C00;--am2:rgba(255,140,0,.08);--cy:#FFD080;--cy2:rgba(255,208,128,.08);
+  --bg:#0A0700;--bg1:#110C00;--bg2:#1A1200;--bg3:#221800;
+  --txt:#FFDD99;--txt1:#996633;--txt2:#553311;
+  --br:rgba(255,179,0,.14);--br2:rgba(255,179,0,.28);
+  --glow:0 0 60px rgba(255,179,0,.08);--glow2:0 0 120px rgba(255,179,0,.05);
 }
-/* CYAN — ice cold phosphor */
 [data-theme="cyan"] {
-  --p:    #00EEFF;
-  --p1:   #00BBCC;
-  --p2:   #007788;
-  --p3:   #003344;
-  --pg:   rgba(0,238,255,.12);
-  --pg2:  rgba(0,238,255,.06);
-  --pg3:  rgba(0,238,255,.03);
-  --am:   #7AF8FF;
-  --am2:  rgba(122,248,255,.08);
-  --cy:   #80FFFF;
-  --cy2:  rgba(128,255,255,.08);
-  --bg:   #00090C;
-  --bg1:  #000F14;
-  --bg2:  #00161C;
-  --bg3:  #001E26;
-  --txt:  #AAFFFF;
-  --txt1: #4A8A90;
-  --txt2: #1D4A50;
-  --br:   rgba(0,238,255,.14);
-  --br2:  rgba(0,238,255,.28);
+  --p:#00EEFF;--p1:#00BBCC;--p2:#007788;--p3:#003344;
+  --pg:rgba(0,238,255,.12);--pg2:rgba(0,238,255,.06);--pg3:rgba(0,238,255,.03);
+  --am:#7AF8FF;--am2:rgba(122,248,255,.08);--cy:#80FFFF;--cy2:rgba(128,255,255,.08);
+  --bg:#00090C;--bg1:#000F14;--bg2:#00161C;--bg3:#001E26;
+  --txt:#AAFFFF;--txt1:#4A8A90;--txt2:#1D4A50;
+  --br:rgba(0,238,255,.14);--br2:rgba(0,238,255,.28);
+  --glow:0 0 60px rgba(0,238,255,.08);--glow2:0 0 120px rgba(0,238,255,.05);
 }
-/* RED — danger phosphor */
 [data-theme="red"] {
-  --p:    #FF3344;
-  --p1:   #CC2233;
-  --p2:   #881122;
-  --p3:   #440811;
-  --pg:   rgba(255,51,68,.12);
-  --pg2:  rgba(255,51,68,.06);
-  --pg3:  rgba(255,51,68,.03);
-  --am:   #FF8866;
-  --am2:  rgba(255,136,102,.08);
-  --cy:   #FF99AA;
-  --cy2:  rgba(255,153,170,.08);
-  --bg:   #080003;
-  --bg1:  #0F0005;
-  --bg2:  #160008;
-  --bg3:  #1F000B;
-  --txt:  #FFBBCC;
-  --txt1: #882244;
-  --txt2: #441122;
-  --br:   rgba(255,51,68,.14);
-  --br2:  rgba(255,51,68,.28);
+  --p:#FF3344;--p1:#CC2233;--p2:#881122;--p3:#440811;
+  --pg:rgba(255,51,68,.12);--pg2:rgba(255,51,68,.06);--pg3:rgba(255,51,68,.03);
+  --am:#FF8866;--am2:rgba(255,136,102,.08);--cy:#FF99AA;--cy2:rgba(255,153,170,.08);
+  --bg:#080003;--bg1:#0F0005;--bg2:#160008;--bg3:#1F000B;
+  --txt:#FFBBCC;--txt1:#882244;--txt2:#441122;
+  --br:rgba(255,51,68,.14);--br2:rgba(255,51,68,.28);
+  --glow:0 0 60px rgba(255,51,68,.08);--glow2:0 0 120px rgba(255,51,68,.05);
 }
-/* PURPLE — synthwave phosphor */
 [data-theme="purple"] {
-  --p:    #CC44FF;
-  --p1:   #AA33DD;
-  --p2:   #6611AA;
-  --p3:   #330066;
-  --pg:   rgba(204,68,255,.12);
-  --pg2:  rgba(204,68,255,.06);
-  --pg3:  rgba(204,68,255,.03);
-  --am:   #FF44CC;
-  --am2:  rgba(255,68,204,.08);
-  --cy:   #CC88FF;
-  --cy2:  rgba(204,136,255,.08);
-  --bg:   #04000A;
-  --bg1:  #08000F;
-  --bg2:  #0C0018;
-  --bg3:  #110022;
-  --txt:  #DDAAFF;
-  --txt1: #773399;
-  --txt2: #331155;
-  --br:   rgba(204,68,255,.14);
-  --br2:  rgba(204,68,255,.28);
+  --p:#CC44FF;--p1:#AA33DD;--p2:#6611AA;--p3:#330066;
+  --pg:rgba(204,68,255,.12);--pg2:rgba(204,68,255,.06);--pg3:rgba(204,68,255,.03);
+  --am:#FF44CC;--am2:rgba(255,68,204,.08);--cy:#CC88FF;--cy2:rgba(204,136,255,.08);
+  --bg:#04000A;--bg1:#08000F;--bg2:#0C0018;--bg3:#110022;
+  --txt:#DDAAFF;--txt1:#773399;--txt2:#331155;
+  --br:rgba(204,68,255,.14);--br2:rgba(204,68,255,.28);
+  --glow:0 0 60px rgba(204,68,255,.08);--glow2:0 0 120px rgba(204,68,255,.05);
 }
-/* WHITE — paper / light mode */
 [data-theme="white"] {
-  --p:    #1A7F4A;
-  --p1:   #157040;
-  --p2:   #0D5530;
-  --p3:   #C8E6D8;
-  --pg:   rgba(26,127,74,.1);
-  --pg2:  rgba(26,127,74,.05);
-  --pg3:  rgba(26,127,74,.03);
-  --am:   #B85A00;
-  --am2:  rgba(184,90,0,.07);
-  --cy:   #0066AA;
-  --cy2:  rgba(0,102,170,.07);
-  --rd:   #CC2233;
-  --bg:   #F5F5F0;
-  --bg1:  #ECEEE8;
-  --bg2:  #E4E7E0;
-  --bg3:  #DDDFD8;
-  --txt:  #1A2A1E;
-  --txt1: #4A6A55;
-  --txt2: #8AAA94;
-  --br:   rgba(26,127,74,.16);
-  --br2:  rgba(26,127,74,.3);
+  --p:#1A7F4A;--p1:#157040;--p2:#0D5530;--p3:#C8E6D8;
+  --pg:rgba(26,127,74,.1);--pg2:rgba(26,127,74,.05);--pg3:rgba(26,127,74,.03);
+  --am:#B85A00;--am2:rgba(184,90,0,.07);--cy:#0066AA;--cy2:rgba(0,102,170,.07);--rd:#CC2233;
+  --bg:#F5F5F0;--bg1:#ECEEE8;--bg2:#E4E7E0;--bg3:#DDDFD8;
+  --txt:#1A2A1E;--txt1:#4A6A55;--txt2:#8AAA94;
+  --br:rgba(26,127,74,.16);--br2:rgba(26,127,74,.3);
+  --glow:0 0 60px rgba(26,127,74,.06);--glow2:0 0 120px rgba(26,127,74,.03);
 }
-/* BLUE — deep ocean phosphor */
 [data-theme="blue"] {
-  --p:    #4488FF;
-  --p1:   #3366DD;
-  --p2:   #1A3E99;
-  --p3:   #0D1F55;
-  --pg:   rgba(68,136,255,.12);
-  --pg2:  rgba(68,136,255,.06);
-  --pg3:  rgba(68,136,255,.03);
-  --am:   #66CCFF;
-  --am2:  rgba(102,204,255,.08);
-  --cy:   #88DDFF;
-  --cy2:  rgba(136,221,255,.08);
-  --bg:   #000510;
-  --bg1:  #000818;
-  --bg2:  #000C22;
-  --bg3:  #00112E;
-  --txt:  #AACCFF;
-  --txt1: #3355AA;
-  --txt2: #162255;
-  --br:   rgba(68,136,255,.14);
-  --br2:  rgba(68,136,255,.28);
+  --p:#4488FF;--p1:#3366DD;--p2:#1A3E99;--p3:#0D1F55;
+  --pg:rgba(68,136,255,.12);--pg2:rgba(68,136,255,.06);--pg3:rgba(68,136,255,.03);
+  --am:#66CCFF;--am2:rgba(102,204,255,.08);--cy:#88DDFF;--cy2:rgba(136,221,255,.08);
+  --bg:#000510;--bg1:#000818;--bg2:#000C22;--bg3:#00112E;
+  --txt:#AACCFF;--txt1:#3355AA;--txt2:#162255;
+  --br:rgba(68,136,255,.14);--br2:rgba(68,136,255,.28);
+  --glow:0 0 60px rgba(68,136,255,.08);--glow2:0 0 120px rgba(68,136,255,.05);
 }
 
 /* ════════════════════════════════════════
@@ -182,111 +99,205 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:'JetBrains Mono',monospace;
+  font-family:'JetBrains Mono','Fira Code',monospace;
   font-size:13px; line-height:1.6;
   background:var(--bg); color:var(--txt);
   overflow-x:hidden; min-height:100vh;
   cursor:default;
+  transition: background .5s ease, color .4s ease;
 }
 a{color:inherit;text-decoration:none}
-::-webkit-scrollbar{width:4px;height:4px}
+::selection{background:var(--p);color:var(--bg)}
+::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--p3);border-radius:2px}
+::-webkit-scrollbar-thumb{background:var(--p3);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--p2)}
 
 /* ════════════════════════════════════════
-   CRT LAYERS
+   CRT LAYERS — enhanced
 ════════════════════════════════════════ */
 /* scan lines */
 body::before{
   content:''; position:fixed; inset:0; z-index:9000; pointer-events:none;
   background:repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,.04) 2px, rgba(0,0,0,.04) 4px
+    0deg, transparent, transparent 1px,
+    rgba(0,0,0,.03) 1px, rgba(0,0,0,.03) 2px
   );
+  animation: scanline-scroll 10s linear infinite;
+}
+@keyframes scanline-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
 }
 /* vignette */
 body::after{
   content:''; position:fixed; inset:0; z-index:9001; pointer-events:none;
-  background:radial-gradient(ellipse 100% 100% at 50% 50%,
-    transparent 40%, rgba(0,0,0,.65) 100%);
+  background:radial-gradient(ellipse 120% 120% at 50% 50%,
+    transparent 50%, rgba(0,0,0,.55) 100%);
+}
+/* CRT flicker overlay */
+#crt-flicker {
+  position:fixed; inset:0; z-index:9002; pointer-events:none;
+  opacity:0;
+  animation: crt-flicker 0.15s infinite;
+}
+@keyframes crt-flicker {
+  0% { opacity:0; }
+  5% { opacity:0.012; background:var(--pg3); }
+  10% { opacity:0; }
+  15% { opacity:0.008; }
+  20% { opacity:0; }
+  100% { opacity:0; }
+}
+/* Horizontal scan line that moves */
+#scan-beam {
+  position:fixed; left:0; right:0; height:3px; z-index:9003;
+  pointer-events:none;
+  background:linear-gradient(180deg, transparent, var(--pg), transparent);
+  opacity:.3;
+  animation: scan-beam 8s ease-in-out infinite;
+}
+@keyframes scan-beam {
+  0% { top:-3px; }
+  100% { top:100vh; }
 }
 
 /* ════════════════════════════════════════
-   THEME PICKER
+   POWER ON EFFECT
+════════════════════════════════════════ */
+#power-on {
+  position:fixed; inset:0; z-index:10000;
+  background:var(--bg);
+  pointer-events:none;
+  animation: power-on 0.6s cubic-bezier(.2,0,.1,1) 0.1s forwards;
+}
+@keyframes power-on {
+  0% { 
+    clip-path: inset(49.5% 20% 49.5% 20%);
+    opacity:1;
+  }
+  30% {
+    clip-path: inset(49% 0% 49% 0%);
+  }
+  60% {
+    clip-path: inset(0% 0% 0% 0%);
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}
+
+/* ════════════════════════════════════════
+   THEME PICKER — enhanced
 ════════════════════════════════════════ */
 #theme-picker {
   position:fixed; bottom:24px; right:24px; z-index:8500;
   display:flex; flex-direction:column; align-items:flex-end; gap:8px;
 }
 #theme-toggle {
-  width:38px; height:38px; border-radius:50%;
+  width:42px; height:42px; border-radius:50%;
   background:var(--bg2); border:1px solid var(--br2);
   display:grid; place-items:center; cursor:pointer;
-  font-size:15px; transition:.2s;
+  font-size:16px; transition:.3s cubic-bezier(.4,0,.2,1);
   box-shadow:0 0 20px rgba(0,0,0,.5), 0 0 12px var(--pg);
+  backdrop-filter:blur(8px);
 }
 #theme-toggle:hover {
-  border-color:var(--p); box-shadow:0 0 24px var(--pg), 0 0 12px var(--pg);
-  transform:scale(1.08);
+  border-color:var(--p); 
+  box-shadow:0 0 30px var(--pg), 0 0 60px var(--pg2);
+  transform:scale(1.12) rotate(15deg);
 }
 #theme-panel {
   background:var(--bg2);
   border:1px solid var(--br2);
-  border-radius:10px;
-  padding:14px 16px;
-  min-width:220px;
-  box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 20px var(--pg);
-  opacity:0; pointer-events:none; transform:translateY(8px) scale(.97);
-  transition:all .22s cubic-bezier(.4,0,.2,1);
+  border-radius:12px;
+  padding:16px 18px;
+  min-width:240px;
+  box-shadow:0 12px 50px rgba(0,0,0,.8), 0 0 30px var(--pg);
+  opacity:0; pointer-events:none; transform:translateY(10px) scale(.95);
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  backdrop-filter:blur(12px);
 }
 #theme-panel.open {
   opacity:1; pointer-events:all; transform:translateY(0) scale(1);
 }
 .tp-title {
-  font-size:9px; letter-spacing:.2em; text-transform:uppercase;
-  color:var(--txt2); margin-bottom:12px;
+  font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--txt2); margin-bottom:14px;
   display:flex; align-items:center; gap:6px;
 }
 .tp-title::before { content:'// '; color:var(--txt2) }
 .tp-swatches {
-  display:grid; grid-template-columns:repeat(3,1fr); gap:7px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
 }
 .tp-swatch {
   display:flex; flex-direction:column; align-items:center; gap:5px;
-  cursor:pointer; padding:8px 6px; border-radius:7px;
-  border:1px solid transparent; transition:.18s;
+  cursor:pointer; padding:10px 6px; border-radius:8px;
+  border:1px solid transparent; transition:.2s cubic-bezier(.4,0,.2,1);
 }
-.tp-swatch:hover { background:var(--pg2); border-color:var(--br2) }
+.tp-swatch:hover { background:var(--pg2); border-color:var(--br2); transform:scale(1.05) }
 .tp-swatch.active { border-color:var(--p); background:var(--pg) }
 .tp-dot {
-  width:22px; height:22px; border-radius:50%;
+  width:24px; height:24px; border-radius:50%;
   border:2px solid rgba(255,255,255,.12);
-  box-shadow:0 0 8px currentColor;
+  box-shadow:0 0 10px currentColor;
   flex-shrink:0;
+  transition:.2s;
 }
+.tp-swatch:hover .tp-dot { transform:scale(1.15); box-shadow:0 0 16px currentColor; }
 .tp-label {
   font-size:9px; letter-spacing:.06em; color:var(--txt1);
-  text-align:center;
+  text-align:center; transition:.15s;
 }
 .tp-swatch.active .tp-label { color:var(--p) }
 .tp-cmd {
-  margin-top:12px; padding-top:10px;
+  margin-top:14px; padding-top:12px;
   border-top:1px solid var(--br);
   font-size:9.5px; color:var(--txt2); text-align:center;
 }
 .tp-cmd span { color:var(--am) }
 
 /* ════════════════════════════════════════
+   NAV SIDEBAR — floating
+════════════════════════════════════════ */
+#nav-dots {
+  position:fixed; left:16px; top:50%; transform:translateY(-50%);
+  z-index:8000; display:flex; flex-direction:column; gap:12px;
+  opacity:0; animation: nav-in .4s ease 5.5s forwards;
+}
+@keyframes nav-in { to { opacity:1 } }
+.nav-dot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--p3); border:1px solid var(--br);
+  cursor:pointer; transition:.25s;
+  position:relative;
+}
+.nav-dot:hover, .nav-dot.active {
+  background:var(--p); box-shadow:0 0 12px var(--pg);
+  transform:scale(1.4);
+}
+.nav-dot::after {
+  content:attr(data-label);
+  position:absolute; left:18px; top:50%; transform:translateY(-50%);
+  font-size:9px; color:var(--txt1); white-space:nowrap;
+  opacity:0; pointer-events:none; transition:.2s;
+  background:var(--bg2); padding:2px 8px; border-radius:3px;
+  border:1px solid var(--br);
+}
+.nav-dot:hover::after { opacity:1; }
+
+/* ════════════════════════════════════════
    MATRIX RAIN CANVAS
 ════════════════════════════════════════ */
 #matrix-canvas{
-  position:fixed; inset:0; z-index:0; opacity:.045;
+  position:fixed; inset:0; z-index:0; opacity:.04;
   pointer-events:none;
 }
 
 /* ════════════════════════════════════════
-   BOOT SCREEN
+   BOOT SCREEN — enhanced
 ════════════════════════════════════════ */
 #boot{
   position:fixed; inset:0; z-index:8000;
@@ -294,39 +305,56 @@ body::after{
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   padding:40px;
-  animation:boot-fade .6s ease 4.6s forwards;
+  animation:boot-fade .8s cubic-bezier(.4,0,.2,1) 4.8s forwards;
 }
 @keyframes boot-fade{to{opacity:0;pointer-events:none;visibility:hidden}}
 .boot-ascii{
   font-size:9px; line-height:1.15; color:var(--p);
-  text-shadow:0 0 12px var(--p), 0 0 24px rgba(0,255,159,.3);
+  text-shadow:0 0 15px var(--p), 0 0 30px rgba(0,255,159,.25);
   white-space:pre; font-family:'JetBrains Mono',monospace;
   animation:phosphor-flicker 4s ease infinite;
+  opacity:0; animation: boot-ascii-in .3s ease .2s forwards, phosphor-flicker 4s ease infinite;
 }
+@keyframes boot-ascii-in { to { opacity:1 } }
 @keyframes phosphor-flicker{
-  0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.85} 94%{opacity:1}
-  96%{opacity:.9} 97%{opacity:1}
+  0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.82} 94%{opacity:1}
+  96%{opacity:.88} 97%{opacity:1}
 }
 .boot-bar{
   width:100%; max-width:560px; margin-top:32px;
-  background:var(--bg2); border:1px solid var(--br); border-radius:2px;
-  height:4px; overflow:hidden;
+  background:var(--bg2); border:1px solid var(--br); border-radius:3px;
+  height:5px; overflow:hidden;
+  position:relative;
 }
+.boot-bar::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
+  animation: shimmer 2s ease infinite;
+}
+@keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
 .boot-bar-fill{
   height:100%; width:0;
   background:linear-gradient(90deg, var(--p2), var(--p));
-  box-shadow:0 0 10px var(--p);
+  box-shadow:0 0 12px var(--p), 0 0 4px var(--p);
   animation:bar-fill 3.6s cubic-bezier(.4,0,.2,1) .4s forwards;
+  position:relative;
 }
 @keyframes bar-fill{to{width:100%}}
+.boot-pct{
+  font-size:11px; color:var(--p1); margin-top:8px;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.1em;
+}
 .boot-log{
-  width:100%; max-width:560px; margin-top:20px;
-  display:flex; flex-direction:column; gap:3px;
+  width:100%; max-width:560px; margin-top:16px;
+  display:flex; flex-direction:column; gap:2px;
+  max-height:200px; overflow-y:auto;
 }
 .bl{
-  font-size:11px; color:var(--txt1); opacity:0;
-  display:flex; justify-content:space-between;
+  font-size:10.5px; color:var(--txt1); opacity:0;
+  display:flex; justify-content:space-between; gap:12px;
   animation:bl-in .05s ease forwards;
+  padding:1px 0;
 }
 .bl .ok{color:var(--p); font-weight:700}
 .bl .warn{color:var(--am)}
@@ -339,63 +367,77 @@ body::after{
 #main{
   position:relative; z-index:1;
   max-width:1120px; margin:0 auto;
-  padding:20px 20px 60px;
-  opacity:0; animation:main-in .5s ease 5s forwards;
+  padding:20px 20px 80px;
+  padding-left:40px;
+  opacity:0; animation:main-in .6s ease 5s forwards;
 }
 @keyframes main-in{to{opacity:1}}
 
 /* ════════════════════════════════════════
-   WINDOW CHROME
+   WINDOW CHROME — enhanced
 ════════════════════════════════════════ */
 .win{
   background:var(--bg1);
   border:1px solid var(--br);
-  border-radius:8px; overflow:hidden;
-  margin-bottom:16px;
+  border-radius:10px; overflow:hidden;
+  margin-bottom:18px;
   box-shadow:
     0 0 0 1px rgba(0,255,159,.04),
-    0 0 40px rgba(0,255,159,.04),
+    var(--glow),
     inset 0 1px 0 rgba(255,255,255,.03);
-  transition:box-shadow .3s, border-color .3s;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  position:relative;
 }
+.win::before {
+  content:''; position:absolute; inset:-1px; border-radius:11px;
+  background:linear-gradient(135deg, var(--pg), transparent 40%, transparent 60%, var(--pg));
+  z-index:-1; opacity:0; transition:opacity .35s;
+}
+.win:hover::before { opacity:1 }
 .win:hover{
   border-color:var(--br2);
   box-shadow:
     0 0 0 1px rgba(0,255,159,.08),
-    0 0 60px rgba(0,255,159,.07),
+    0 4px 60px rgba(0,255,159,.08),
+    var(--glow2),
     inset 0 1px 0 rgba(255,255,255,.04);
+  transform:translateY(-2px);
 }
 .tb{
   display:flex; align-items:center; gap:8px;
-  padding:9px 16px;
-  background:linear-gradient(180deg, rgba(0,255,159,.07) 0%, rgba(0,255,159,.03) 100%);
+  padding:10px 16px;
+  background:linear-gradient(180deg, rgba(0,255,159,.08) 0%, rgba(0,255,159,.02) 100%);
   border-bottom:1px solid var(--br);
   position:relative;
 }
-.wdots{display:flex;gap:6px;flex-shrink:0}
+.tb::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--pg), transparent);
+}
+.wdots{display:flex;gap:7px;flex-shrink:0}
 .wd{
   width:12px; height:12px; border-radius:50%;
-  position:relative; cursor:pointer; transition:filter .2s;
+  position:relative; cursor:pointer; transition:.2s;
 }
-.wd:hover{filter:brightness(1.3)}
+.wd:hover{filter:brightness(1.4); transform:scale(1.15)}
 .wd::after{content:'';position:absolute;inset:3px;border-radius:50%;background:rgba(0,0,0,.2)}
-.wd.r{background:#FF5F57;box-shadow:0 0 6px rgba(255,95,87,.4)}
-.wd.y{background:#FEBC2E;box-shadow:0 0 6px rgba(254,188,46,.4)}
-.wd.g{background:#28CA40;box-shadow:0 0 6px rgba(40,202,64,.4)}
+.wd.r{background:#FF5F57;box-shadow:0 0 8px rgba(255,95,87,.4)}
+.wd.y{background:#FEBC2E;box-shadow:0 0 8px rgba(254,188,46,.4)}
+.wd.g{background:#28CA40;box-shadow:0 0 8px rgba(40,202,64,.4)}
 .wt{
   flex:1; text-align:center; color:var(--txt1);
-  font-size:11px; letter-spacing:.03em;
+  font-size:11px; letter-spacing:.04em;
 }
 .wt-cmd{color:var(--p1); font-size:10px; margin-left:auto; font-weight:500}
-.pad{padding:24px}
-.pad-sm{padding:16px 24px}
+.pad{padding:24px 28px}
+.pad-sm{padding:16px 28px}
 
 /* ════════════════════════════════════════
-   PROMPT
+   PROMPT — enhanced
 ════════════════════════════════════════ */
 .pr{
   display:flex; align-items:center; flex-wrap:wrap; gap:0;
-  margin-bottom:16px; user-select:none;
+  margin-bottom:18px; user-select:none;
 }
 .pr-u{color:var(--p);font-weight:700}
 .pr-at{color:var(--txt2)}
@@ -403,60 +445,108 @@ body::after{
 .pr-sep{color:var(--txt2); margin:0 1px}
 .pr-path{color:var(--am)}
 .pr-git{color:var(--p1); font-size:11px; margin-left:4px}
-.pr-${ color:var(--txt1); margin:0 6px 0 2px}
+.pr-${color:var(--txt1); margin:0 6px 0 2px}
 .pr-cmd{color:var(--txt)}
 .pr-arg{color:var(--cy)}
 .pr-flag{color:var(--am)}
 .pr-str{color:var(--p1)}
 
 /* ════════════════════════════════════════
-   NEOFETCH HEADER
+   NEOFETCH HEADER — enhanced
 ════════════════════════════════════════ */
 .neofetch{
   display:grid;
   grid-template-columns:auto 1fr;
-  gap:0 40px; align-items:start;
+  gap:0 44px; align-items:start;
 }
 .nf-ascii{
   font-size:9.5px; line-height:1.18; color:var(--p);
-  text-shadow:0 0 14px rgba(0,255,159,.4);
+  text-shadow:0 0 16px rgba(0,255,159,.45), 0 0 40px rgba(0,255,159,.15);
   white-space:pre; flex-shrink:0;
   animation:phosphor-flicker 6s ease infinite;
+  transition: text-shadow .4s;
+}
+.nf-ascii:hover {
+  text-shadow:0 0 20px rgba(0,255,159,.6), 0 0 50px rgba(0,255,159,.25);
 }
 .nf-info{padding-top:2px}
 .nf-title{
-  font-size:17px; font-weight:700; color:var(--p);
-  text-shadow:0 0 16px rgba(0,255,159,.5);
+  font-size:18px; font-weight:700; color:var(--p);
+  text-shadow:0 0 18px rgba(0,255,159,.5);
   letter-spacing:-.01em; margin-bottom:4px;
 }
-.nf-sep{color:var(--txt2); margin-bottom:12px; font-size:11px}
+.nf-sep{color:var(--txt2); margin-bottom:12px; font-size:11px; opacity:.5}
 .nf-row{
-  display:flex; gap:6px; margin-bottom:4px;
+  display:flex; gap:6px; margin-bottom:5px;
   font-size:12px; line-height:1.5;
 }
 .nf-key{color:var(--p1); font-weight:600; min-width:120px; flex-shrink:0}
-.nf-val{color:var(--txt)}
-.nf-val a{color:var(--cy); transition:.15s}
-.nf-val a:hover{color:var(--p); text-decoration:underline; text-underline-offset:3px}
-.nf-palette{display:flex;gap:4px;margin-top:14px}
-.nf-swatch{width:22px;height:14px;border-radius:2px}
-
-/* status badge */
-.status-badge{
-  display:inline-flex; align-items:center; gap:7px;
-  background:rgba(0,255,159,.07); border:1px solid rgba(0,255,159,.2);
-  border-radius:4px; padding:5px 10px;
-  font-size:11px; color:var(--p); margin-top:12px;
+.nf-val{color:var(--txt); transition:.15s}
+.nf-val a{
+  color:var(--cy); transition:.2s;
+  text-decoration:none;
+  position:relative;
 }
+.nf-val a::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0; height:1px;
+  background:var(--cy); transform:scaleX(0); transform-origin:right;
+  transition:.3s cubic-bezier(.4,0,.2,1);
+}
+.nf-val a:hover::after { transform:scaleX(1); transform-origin:left; }
+.nf-val a:hover{color:var(--p)}
+.nf-palette{display:flex;gap:5px;margin-top:16px}
+.nf-swatch{
+  width:24px;height:14px;border-radius:3px;
+  transition:.2s; cursor:crosshair;
+}
+.nf-swatch:hover{transform:scaleY(1.8); border-radius:2px}
+
+/* status badge — enhanced */
+.status-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(0,255,159,.08); border:1px solid rgba(0,255,159,.22);
+  border-radius:5px; padding:6px 14px;
+  font-size:11px; color:var(--p); margin-top:14px;
+  transition:.25s;
+  position:relative; overflow:hidden;
+}
+.status-badge::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, var(--pg2), transparent);
+  animation: badge-shimmer 3s ease infinite;
+}
+@keyframes badge-shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+.status-badge:hover { background:rgba(0,255,159,.14); border-color:var(--p); }
 .s-dot{
   width:7px; height:7px; border-radius:50%; background:var(--p);
   box-shadow:0 0 8px var(--p);
   animation:s-pulse 2s ease-in-out infinite;
+  flex-shrink:0;
 }
-@keyframes s-pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--p)}50%{opacity:.5;box-shadow:0 0 16px var(--p)}}
+@keyframes s-pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--p)}50%{opacity:.4;box-shadow:0 0 20px var(--p)}}
 
 /* ════════════════════════════════════════
-   STATS BAR
+   SUMMARY BLOCK — enhanced
+════════════════════════════════════════ */
+.summary-block {
+  border-left:2px solid var(--p);
+  padding-left:18px;
+  color:var(--txt);
+  font-size:12.5px;
+  line-height:1.9;
+  position:relative;
+}
+.summary-block::before {
+  content:''; position:absolute; left:-2px; top:0; bottom:0; width:2px;
+  background:linear-gradient(180deg, var(--p), var(--p1), var(--p2));
+  box-shadow:0 0 8px var(--pg);
+}
+.summary-block .hl { color:var(--p); font-weight:500 }
+.summary-block .hl-am { color:var(--am); font-weight:500 }
+.summary-block .hl-cy { color:var(--cy); font-weight:500 }
+
+/* ════════════════════════════════════════
+   STATS BAR — enhanced with counters
 ════════════════════════════════════════ */
 .stats-bar{
   display:flex; flex-wrap:wrap; gap:0;
@@ -464,185 +554,249 @@ body::after{
   font-size:11px; color:var(--txt1);
 }
 .sb-item{
-  display:flex; align-items:center; gap:5px;
-  padding:9px 18px;
+  display:flex; align-items:center; gap:6px;
+  padding:10px 20px;
   border-right:1px solid var(--br);
-  transition:background .2s;
+  transition:.25s;
+  cursor:default;
 }
 .sb-item:last-child{border-right:none; margin-left:auto}
-.sb-item:hover{background:var(--pg3)}
-.sb-key{color:var(--txt2)}
-.sb-val{color:var(--p); font-weight:700}
+.sb-item:hover{background:var(--pg2); color:var(--p)}
+.sb-key{color:var(--txt2); transition:.15s}
+.sb-item:hover .sb-key{color:var(--txt1)}
+.sb-val{color:var(--p); font-weight:700; font-variant-numeric:tabular-nums}
 .sb-sep{color:var(--txt2)}
 
 /* ════════════════════════════════════════
-   SKILLS
+   SKILLS — enhanced
 ════════════════════════════════════════ */
 .sk-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
-  gap:12px;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:14px;
 }
 .sk-cat{
   background:var(--pg3); border:1px solid var(--br);
-  border-radius:6px; padding:16px;
-  transition:border-color .2s, background .2s;
+  border-radius:8px; padding:18px;
+  transition:.3s cubic-bezier(.4,0,.2,1);
   position:relative; overflow:hidden;
 }
 .sk-cat::before{
   content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
-  background:linear-gradient(90deg, var(--p2), var(--p), var(--p2));
-  transform:scaleX(0); transition:.35s;
+  background:linear-gradient(90deg, transparent, var(--p), transparent);
+  transform:scaleX(0); transition:.4s cubic-bezier(.4,0,.2,1);
+}
+.sk-cat::after{
+  content:''; position:absolute; top:-30px; right:-30px;
+  width:60px; height:60px; border-radius:50%;
+  background:radial-gradient(circle, var(--pg), transparent 70%);
+  opacity:0; transition:.3s;
 }
 .sk-cat:hover::before{transform:scaleX(1)}
-.sk-cat:hover{border-color:var(--br2); background:var(--pg2)}
+.sk-cat:hover::after{opacity:1}
+.sk-cat:hover{border-color:var(--br2); background:var(--pg2); transform:translateY(-2px)}
 .sk-title{
-  color:var(--am); font-size:11px; font-weight:600;
-  letter-spacing:.06em; text-transform:uppercase;
+  color:var(--am); font-size:10.5px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase;
   margin-bottom:12px; display:flex; align-items:center; gap:6px;
 }
 .sk-title::before{content:'// ';color:var(--txt2); font-weight:400}
-.sk-tags{display:flex;flex-wrap:wrap;gap:5px}
+.sk-tags{display:flex;flex-wrap:wrap;gap:6px}
 .tag{
   background:var(--pg2); border:1px solid var(--br);
-  color:var(--p1); padding:2px 9px; border-radius:3px;
-  font-size:11px; letter-spacing:.02em; transition:.15s; cursor:default;
+  color:var(--p1); padding:3px 10px; border-radius:4px;
+  font-size:11px; letter-spacing:.02em; transition:.2s; cursor:default;
 }
-.tag:hover{background:rgba(0,255,159,.15);color:var(--p);border-color:var(--p);box-shadow:0 0 8px rgba(0,255,159,.15)}
+.tag:hover{
+  background:rgba(0,255,159,.18);color:var(--p);border-color:var(--p);
+  box-shadow:0 0 12px rgba(0,255,159,.15);
+  transform:translateY(-1px);
+}
 
 /* ════════════════════════════════════════
-   EXPERIENCE
+   PROGRESS BARS — enhanced
+════════════════════════════════════════ */
+.prog-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.prog-label{color:var(--txt);font-size:11px;min-width:100px;flex-shrink:0}
+.prog-bar{
+  flex:1; height:5px; background:var(--bg3);
+  border-radius:3px; overflow:hidden;
+  position:relative;
+}
+.prog-fill{
+  height:100%; border-radius:3px;
+  background:linear-gradient(90deg, var(--p3), var(--p2), var(--p));
+  box-shadow:0 0 10px rgba(0,255,159,.3);
+  width:0; transition:width 1.4s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.prog-fill::after {
+  content:''; position:absolute; right:0; top:-1px; bottom:-1px; width:6px;
+  background:var(--p);
+  box-shadow:0 0 8px var(--p), 0 0 16px var(--pg);
+  border-radius:0 3px 3px 0;
+  opacity:0;
+  transition: opacity .3s .8s;
+}
+.prog-fill.animated::after { opacity:1 }
+.prog-val{font-size:10px;color:var(--p1);min-width:36px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ════════════════════════════════════════
+   EXPERIENCE — enhanced
 ════════════════════════════════════════ */
 .xp-card{
-  border:1px solid var(--br); border-radius:6px;
-  padding:20px; margin-bottom:14px;
+  border:1px solid var(--br); border-radius:8px;
+  padding:22px; margin-bottom:14px;
   background:var(--pg3); position:relative;
-  transition:border-color .25s, background .25s;
+  transition:.3s cubic-bezier(.4,0,.2,1);
   overflow:hidden;
 }
 .xp-card::before{
   content:''; position:absolute; left:0; top:0; bottom:0; width:0;
   background:linear-gradient(to bottom, var(--p), var(--p1));
-  transition:width .3s;
-  border-radius:6px 0 0 6px;
+  transition:width .35s cubic-bezier(.4,0,.2,1);
+  border-radius:8px 0 0 8px;
 }
 .xp-card:hover::before{width:3px}
 .xp-card:hover{
   border-color:rgba(0,255,159,.35);
   background:rgba(0,255,159,.04);
+  transform:translateX(4px);
 }
-.xp-card-inner{padding-left:0; transition:padding-left .3s}
-.xp-card:hover .xp-card-inner{padding-left:12px}
+.xp-card-inner{padding-left:0; transition:padding-left .35s cubic-bezier(.4,0,.2,1)}
+.xp-card:hover .xp-card-inner{padding-left:14px}
 .xp-hd{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:3px}
 .xp-co{font-size:14px;font-weight:700;color:var(--p);letter-spacing:-.01em}
+.xp-co a{position:relative}
+.xp-co a::after {
+  content:'↗'; font-size:10px; margin-left:4px; opacity:0; transition:.2s;
+  color:var(--txt2);
+}
+.xp-co a:hover::after{opacity:1}
 .xp-co a:hover{text-decoration:underline;text-underline-offset:3px;color:var(--p1)}
 .xp-role{font-size:12px;color:var(--cy)}
 .xp-period{
   font-size:10.5px; color:var(--txt1);
   background:rgba(0,255,159,.06); border:1px solid var(--br);
-  padding:3px 9px; border-radius:3px; white-space:nowrap;
+  padding:3px 10px; border-radius:4px; white-space:nowrap;
+  font-variant-numeric:tabular-nums;
 }
-.xp-loc{font-size:11px; color:var(--txt2); margin:5px 0 12px}
-.bullets{list-style:none;display:flex;flex-direction:column;gap:7px}
+.xp-loc{font-size:11px; color:var(--txt2); margin:6px 0 14px}
+.bullets{list-style:none;display:flex;flex-direction:column;gap:8px}
 .bullets li{
-  padding-left:20px; position:relative;
-  color:var(--txt); font-size:12.5px; line-height:1.7;
+  padding-left:22px; position:relative;
+  color:var(--txt); font-size:12.5px; line-height:1.75;
 }
 .bullets li::before{
   content:'▸'; position:absolute; left:0;
-  color:var(--p); transition:.15s;
+  color:var(--p); transition:.2s;
 }
-.bullets li:hover::before{color:var(--am); transform:translateX(2px)}
+.bullets li:hover::before{color:var(--am); transform:translateX(3px)}
 .bullets li strong{color:var(--am); font-weight:500}
-.bullets li a{color:var(--cy); border-bottom:1px solid transparent; transition:.15s}
-.bullets li a:hover{border-bottom-color:var(--cy)}
+.bullets li a{
+  color:var(--cy); border-bottom:1px solid rgba(0,212,255,.3); transition:.2s;
+  padding-bottom:1px;
+}
+.bullets li a:hover{border-bottom-color:var(--cy); color:var(--p)}
 
 /* ════════════════════════════════════════
-   PROJECTS
+   PROJECTS — enhanced
 ════════════════════════════════════════ */
 .pj-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
-  gap:12px;
+  gap:14px;
 }
 .pj{
   background:var(--pg3); border:1px solid var(--br);
-  border-radius:6px; padding:18px;
+  border-radius:8px; padding:20px;
   position:relative; overflow:hidden;
   display:flex; flex-direction:column;
-  transition:all .25s;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
 }
-/* corner glow */
 .pj::after{
-  content:''; position:absolute; top:-20px; right:-20px;
-  width:80px; height:80px; border-radius:50%;
-  background:radial-gradient(circle, rgba(0,255,159,.12), transparent 70%);
-  pointer-events:none; transition:opacity .3s;
+  content:''; position:absolute; top:-30px; right:-30px;
+  width:100px; height:100px; border-radius:50%;
+  background:radial-gradient(circle, rgba(0,255,159,.1), transparent 70%);
+  pointer-events:none; transition:.4s;
   opacity:0;
 }
 .pj:hover::after{opacity:1}
 .pj:hover{
-  border-color:rgba(0,255,159,.35);
+  border-color:rgba(0,255,159,.4);
   background:rgba(0,255,159,.05);
-  transform:translateY(-3px);
-  box-shadow:0 12px 40px rgba(0,255,159,.08);
+  transform:translateY(-4px);
+  box-shadow:0 16px 50px rgba(0,255,159,.08), var(--glow);
 }
 .pj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
 .pj-num{
   font-size:9px; color:var(--txt2); letter-spacing:.12em;
-  text-transform:uppercase; padding:2px 7px;
+  text-transform:uppercase; padding:3px 8px;
   background:var(--pg2); border:1px solid var(--br);
-  border-radius:2px;
+  border-radius:3px;
 }
 .pj-link-icon{
-  color:var(--p2); font-size:12px; transition:.2s;
-  padding:2px 7px; border:1px solid transparent; border-radius:3px;
+  color:var(--p2); font-size:13px; transition:.25s;
+  padding:3px 8px; border:1px solid transparent; border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
 }
-.pj:hover .pj-link-icon{color:var(--p);border-color:var(--br2)}
-.pj-name{font-size:13px;font-weight:700;color:var(--p);margin-bottom:3px}
+.pj:hover .pj-link-icon{
+  color:var(--p);border-color:var(--br2);
+  background:var(--pg2);
+}
+.pj-name{font-size:13.5px;font-weight:700;color:var(--p);margin-bottom:4px}
 .pj-name a:hover{color:var(--p1)}
 .pj-date{font-size:10px;color:var(--txt2);margin-bottom:10px}
-.pj-stack{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.pj-stack{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
 .pj-stack span{
   font-size:10px; color:var(--cy);
   background:var(--cy2); border:1px solid rgba(0,212,255,.2);
-  padding:2px 7px; border-radius:3px;
+  padding:2px 8px; border-radius:3px;
+  transition:.15s;
 }
-.pj-desc{font-size:12px;color:var(--txt);line-height:1.7;flex:1}
+.pj-stack span:hover{background:rgba(0,212,255,.15); border-color:var(--cy)}
+.pj-desc{font-size:12px;color:var(--txt);line-height:1.75;flex:1}
 .pj-desc strong{color:var(--am);font-weight:500}
 
 /* ════════════════════════════════════════
-   EDUCATION
+   EDUCATION — enhanced
 ════════════════════════════════════════ */
 .edu-card{
   background:var(--pg3); border:1px solid var(--br);
-  border-radius:6px; padding:20px; margin-bottom:12px;
-  transition:border-color .2s;
+  border-radius:8px; padding:22px; margin-bottom:14px;
+  transition:.3s cubic-bezier(.4,0,.2,1);
 }
-.edu-card:hover{border-color:var(--br2)}
+.edu-card:hover{border-color:var(--br2); transform:translateX(4px)}
 .edu-school{font-size:14px;font-weight:700;color:var(--p)}
+.edu-school a{position:relative}
 .edu-school a:hover{text-decoration:underline;text-underline-offset:3px}
 .edu-deg{font-size:12px;color:var(--cy);margin:3px 0 4px}
 .edu-period{font-size:11px;color:var(--txt2);margin-bottom:10px}
 
-/* pub card */
+/* pub card — enhanced */
 .pub{
   background:var(--am2); border:1px solid rgba(255,183,0,.2);
-  border-radius:6px; padding:18px;
-  transition:border-color .2s;
+  border-radius:8px; padding:20px;
+  transition:.3s cubic-bezier(.4,0,.2,1);
+  position:relative; overflow:hidden;
 }
-.pub:hover{border-color:rgba(255,183,0,.4)}
-.pub-t{font-size:13px;font-weight:600;color:var(--am);margin-bottom:5px}
+.pub::before{
+  content:''; position:absolute; top:0; right:0; width:80px; height:80px;
+  background:radial-gradient(circle at top right, rgba(255,183,0,.08), transparent 70%);
+}
+.pub:hover{border-color:rgba(255,183,0,.45); transform:translateX(4px)}
+.pub-t{font-size:13px;font-weight:600;color:var(--am);margin-bottom:6px}
 .pub-t a:hover{text-decoration:underline;text-underline-offset:3px}
-.pub-v{font-size:11px;color:var(--txt1);line-height:1.6;margin-bottom:8px}
+.pub-v{font-size:11px;color:var(--txt1);line-height:1.65;margin-bottom:10px}
 .pub-badge{
-  display:inline-flex; align-items:center; gap:5px;
+  display:inline-flex; align-items:center; gap:6px;
   background:rgba(0,255,159,.08); border:1px solid rgba(0,255,159,.25);
-  color:var(--p); font-size:10px; padding:3px 9px; border-radius:3px;
+  color:var(--p); font-size:10px; padding:4px 11px; border-radius:4px;
+  font-weight:500;
 }
 
 /* ════════════════════════════════════════
-   INTERACTIVE SHELL
+   INTERACTIVE SHELL — enhanced
 ════════════════════════════════════════ */
 .sh-out{min-height:60px; padding-bottom:8px}
 .sh-line{
@@ -658,16 +812,24 @@ body::after{
 .sh-line.b{color:var(--txt); font-weight:600}
 .sh-input-row{
   display:flex; align-items:center; gap:0;
-  margin-top:10px; padding-top:10px;
+  margin-top:12px; padding-top:12px;
   border-top:1px solid var(--br);
 }
 #cmd{
   background:transparent; border:none; outline:none;
-  color:var(--txt); font-family:'JetBrains Mono',monospace;
+  color:var(--txt); font-family:'JetBrains Mono','Fira Code',monospace;
   font-size:13px; flex:1;
   caret-color:var(--p);
 }
 #cmd::placeholder{color:var(--txt2)}
+/* blinking cursor effect */
+.cursor-blink {
+  display:inline-block; width:8px; height:15px;
+  background:var(--p); margin-left:2px;
+  animation:cursor-blink 1s step-end infinite;
+  vertical-align:middle;
+}
+@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}
 
 /* ════════════════════════════════════════
    SECTION CMD DIVIDER
@@ -679,73 +841,124 @@ body::after{
 .sc-div::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--br),transparent)}
 
 /* ════════════════════════════════════════
-   DIFF OUTPUT (for neofetch alt)
-════════════════════════════════════════ */
-.diff-add{color:var(--p)}
-.diff-kv{display:flex;gap:6px;margin-bottom:3px;font-size:12px}
-.diff-k{color:var(--p1);font-weight:600;min-width:110px}
-.diff-v{color:var(--txt)}
-
-/* ════════════════════════════════════════
-   GLITCH EFFECT ON HOVER
+   GLITCH EFFECT — enhanced
 ════════════════════════════════════════ */
 .glitch{position:relative; display:inline-block}
-.glitch:hover{animation:glitch-anim .3s ease}
-@keyframes glitch-anim{
-  0%{text-shadow:none}
-  20%{text-shadow:2px 0 var(--cy), -2px 0 var(--rd)}
-  40%{text-shadow:-2px 0 var(--p), 2px 0 var(--am)}
-  60%{text-shadow:1px 0 var(--cy), -1px 0 var(--rd)}
-  80%{text-shadow:none}
-  100%{text-shadow:none}
+.glitch::before,.glitch::after {
+  content:attr(data-text); position:absolute; top:0; left:0;
+  overflow:hidden; opacity:0; pointer-events:none;
+}
+.glitch:hover::before {
+  animation:glitch-top .3s ease;
+  color:var(--cy); opacity:.8;
+}
+.glitch:hover::after {
+  animation:glitch-bottom .3s ease .05s;
+  color:var(--rd); opacity:.8;
+}
+@keyframes glitch-top{
+  0%{clip-path:inset(0 0 60% 0);transform:translate(0)}
+  20%{clip-path:inset(20% 0 40% 0);transform:translate(-3px,1px)}
+  40%{clip-path:inset(50% 0 10% 0);transform:translate(3px,-1px)}
+  60%{clip-path:inset(10% 0 60% 0);transform:translate(-2px)}
+  80%{clip-path:inset(40% 0 20% 0);transform:translate(2px,1px)}
+  100%{clip-path:inset(0 0 60% 0);transform:translate(0)}
+}
+@keyframes glitch-bottom{
+  0%{clip-path:inset(60% 0 0 0);transform:translate(0)}
+  20%{clip-path:inset(40% 0 20% 0);transform:translate(3px,-1px)}
+  40%{clip-path:inset(10% 0 50% 0);transform:translate(-3px,1px)}
+  60%{clip-path:inset(60% 0 10% 0);transform:translate(2px)}
+  80%{clip-path:inset(20% 0 40% 0);transform:translate(-2px,-1px)}
+  100%{clip-path:inset(60% 0 0 0);transform:translate(0)}
 }
 
 /* ════════════════════════════════════════
-   TYPEWRITER CONTENT REVEAL
+   TYPEWRITER CONTENT REVEAL — enhanced
 ════════════════════════════════════════ */
 .reveal{
-  opacity:0; transform:translateY(10px);
-  transition:opacity .4s ease, transform .4s ease;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.4,0,.2,1);
 }
 .reveal.vis{opacity:1;transform:none}
 
-/* ════════════════════════════════════════
-   PROGRESS BARS (for skills)
-════════════════════════════════════════ */
-.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-.prog-label{color:var(--txt);font-size:11px;min-width:80px;flex-shrink:0}
-.prog-bar{
-  flex:1; height:4px; background:var(--bg3);
-  border-radius:2px; overflow:hidden;
+/* stagger children */
+.reveal.vis .xp-card,
+.reveal.vis .pj,
+.reveal.vis .edu-card,
+.reveal.vis .pub,
+.reveal.vis .sk-cat {
+  animation: stagger-in .4s ease backwards;
 }
-.prog-fill{
-  height:100%; border-radius:2px;
-  background:linear-gradient(90deg, var(--p2), var(--p));
-  box-shadow:0 0 8px rgba(0,255,159,.4);
-  width:0; transition:width 1.2s cubic-bezier(.4,0,.2,1);
+.reveal.vis .xp-card:nth-child(1), .reveal.vis .pj:nth-child(1), .reveal.vis .sk-cat:nth-child(1) { animation-delay:.05s }
+.reveal.vis .xp-card:nth-child(2), .reveal.vis .pj:nth-child(2), .reveal.vis .sk-cat:nth-child(2) { animation-delay:.1s }
+.reveal.vis .xp-card:nth-child(3), .reveal.vis .pj:nth-child(3), .reveal.vis .sk-cat:nth-child(3) { animation-delay:.15s }
+.reveal.vis .sk-cat:nth-child(4) { animation-delay:.2s }
+.reveal.vis .sk-cat:nth-child(5) { animation-delay:.25s }
+@keyframes stagger-in {
+  from { opacity:0; transform:translateY(10px) }
+  to { opacity:1; transform:none }
 }
-.prog-val{font-size:10px;color:var(--txt2);min-width:32px;text-align:right}
 
 /* ════════════════════════════════════════
-   RESPONSIVE
+   FOOTER
+════════════════════════════════════════ */
+#footer {
+  text-align:center; padding:30px 20px;
+  font-size:10px; color:var(--txt2);
+  letter-spacing:.05em;
+  opacity:0; animation: main-in .5s ease 5.5s forwards;
+}
+#footer a { color:var(--p2); transition:.2s }
+#footer a:hover { color:var(--p) }
+
+/* ════════════════════════════════════════
+   RESPONSIVE — enhanced
 ════════════════════════════════════════ */
 @media(max-width:700px){
   .neofetch{grid-template-columns:1fr}
   .nf-ascii{display:none}
-  #main{padding:12px 12px 40px}
+  #main{padding:12px 12px 40px; padding-left:12px}
   .pad{padding:16px}
   .pj-grid{grid-template-columns:1fr}
   .sk-grid{grid-template-columns:1fr}
-  .boot-ascii{font-size:6.5px}
+  .boot-ascii{font-size:5.5px}
   .stats-bar{flex-direction:column}
   .sb-item{border-right:none;border-bottom:1px solid var(--br)}
+  #nav-dots{display:none}
+  #theme-picker{bottom:14px;right:14px}
+  .xp-card:hover{transform:none}
+  .pj:hover{transform:none}
+}
+@media(max-width:400px){
+  body{font-size:12px}
+  .nf-title{font-size:15px}
+  .boot-ascii{font-size:4.5px}
 }
 </style>
 </head>
 <body>
 
+<!-- Power-on CRT effect -->
+<div id="power-on"></div>
+
+<!-- CRT flicker -->
+<div id="crt-flicker"></div>
+<!-- Scan beam -->
+<div id="scan-beam"></div>
+
 <!-- Matrix Rain Canvas -->
 <canvas id="matrix-canvas"></canvas>
+
+<!-- Nav sidebar -->
+<nav id="nav-dots">
+  <div class="nav-dot active" data-label="header" onclick="scrollToSection(0)"></div>
+  <div class="nav-dot" data-label="skills" onclick="scrollToSection(1)"></div>
+  <div class="nav-dot" data-label="experience" onclick="scrollToSection(2)"></div>
+  <div class="nav-dot" data-label="projects" onclick="scrollToSection(3)"></div>
+  <div class="nav-dot" data-label="education" onclick="scrollToSection(4)"></div>
+  <div class="nav-dot" data-label="shell" onclick="scrollToSection(5)"></div>
+</nav>
 
 <!-- ══════ BOOT ══════ -->
 <div id="boot">
@@ -757,6 +970,7 @@ body::after{
  ╚██████╔╝╚█████╔╝██║  ██║███████║ ╚████╔╝
   ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝  ╚═══╝</pre>
   <div class="boot-bar"><div class="boot-bar-fill" id="bar-fill"></div></div>
+  <div class="boot-pct" id="boot-pct">0%</div>
   <div class="boot-log" id="blog"></div>
 </div>
 
@@ -764,7 +978,7 @@ body::after{
 <div id="main">
 
 <!-- 1. HEADER / NEOFETCH -->
-<div class="win reveal">
+<section class="win reveal" id="sec-0">
   <div class="tb">
     <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
     <div class="wt">ojasv@ubc-mds — ~/resume — bash 5.2.21</div>
@@ -777,7 +991,6 @@ body::after{
     </div>
 
     <div class="neofetch">
-      <!-- left: ASCII art -->
       <pre class="nf-ascii">
   ██████╗ ██╗
  ██╔═══██╗██║
@@ -786,9 +999,8 @@ body::after{
  ╚██████╔╝██║
   ╚═════╝ ╚═╝</pre>
 
-      <!-- right: system info -->
       <div class="nf-info">
-        <div class="nf-title glitch">ojasv@ubc-mds</div>
+        <div class="nf-title glitch" data-text="ojasv@ubc-mds">ojasv@ubc-mds</div>
         <div class="nf-sep">──────────────────────────────────────────</div>
         <div class="nf-row"><span class="nf-key">OS</span><span class="nf-val">DataScienceOS 3.5 LTS x86_64</span></div>
         <div class="nf-row"><span class="nf-key">Role</span><span class="nf-val">Data Scientist &amp; ML Engineer</span></div>
@@ -816,26 +1028,25 @@ body::after{
     </div>
   </div>
 
-  <!-- summary -->
   <div class="pad" style="padding-top:0">
     <div class="sc-div">$ cat summary.txt</div>
-    <div style="border-left:2px solid var(--p);padding-left:16px;color:var(--txt);font-size:12.5px;line-height:1.85">
-      <span style="color:var(--p)">Data Scientist &amp; ML Engineer</span> with <span style="color:var(--p)">3.5+ years</span> of experience, pursuing an <span style="color:var(--p)">MDS at UBC</span>, specializing in end-to-end ML system design across <span style="color:var(--am)">low-resource NLP</span>, <span style="color:var(--am)">probabilistic modeling</span>, and <span style="color:var(--am)">scalable data infrastructure</span>. Combines fluency in Python, R, PyTorch, transformer fine-tuning, and distributed pipeline orchestration with <span style="color:var(--cy)">cloud-native AWS deployment</span> — across domains from stochastic game theory to multilingual sentiment classification. Driven by a bias toward <span style="color:var(--p)">production-readiness</span>: every model ships, every pipeline scales.
+    <div class="summary-block">
+      <span class="hl">Data Scientist &amp; ML Engineer</span> with <span class="hl">3.5+ years</span> of experience, pursuing an <span class="hl">MDS at UBC</span>, specializing in end-to-end ML system design across <span class="hl-am">low-resource NLP</span>, <span class="hl-am">probabilistic modeling</span>, and <span class="hl-am">scalable data infrastructure</span>. Combines fluency in Python, R, PyTorch, transformer fine-tuning, and distributed pipeline orchestration with <span class="hl-cy">cloud-native AWS deployment</span> — across domains from stochastic game theory to multilingual sentiment classification. Driven by a bias toward <span class="hl">production-readiness</span>: every model ships, every pipeline scales.
     </div>
   </div>
 
   <div class="stats-bar">
-    <div class="sb-item"><span class="sb-key">uptime</span><span class="sb-sep">:</span><span class="sb-val">3.5+ yrs</span></div>
-    <div class="sb-item"><span class="sb-key">clients</span><span class="sb-sep">:</span><span class="sb-val">30+</span></div>
+    <div class="sb-item"><span class="sb-key">uptime</span><span class="sb-sep">:</span><span class="sb-val" data-count="3.5">0</span><span class="sb-val">+ yrs</span></div>
+    <div class="sb-item"><span class="sb-key">clients</span><span class="sb-sep">:</span><span class="sb-val" data-count="30">0</span><span class="sb-val">+</span></div>
     <div class="sb-item"><span class="sb-key">models_shipped</span><span class="sb-sep">:</span><span class="sb-val">∞</span></div>
-    <div class="sb-item"><span class="sb-key">exams_proctored</span><span class="sb-sep">:</span><span class="sb-val">38K+</span></div>
+    <div class="sb-item"><span class="sb-key">exams_proctored</span><span class="sb-sep">:</span><span class="sb-val" data-count="38000">0</span><span class="sb-val">+</span></div>
     <div class="sb-item"><span class="sb-key">pub_acceptance</span><span class="sb-sep">:</span><span class="sb-val">top 15%</span></div>
     <div class="sb-item"><span class="sb-key">status</span><span class="sb-sep">:</span><span class="sb-val" style="color:var(--p)">● OPEN TO WORK</span></div>
   </div>
-</div>
+</section>
 
 <!-- 2. SKILLS -->
-<div class="win reveal">
+<section class="win reveal" id="sec-1">
   <div class="tb">
     <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
     <div class="wt">skills.json — jq</div>
@@ -846,15 +1057,14 @@ body::after{
       <span class="pr-cmd">jq </span><span class="pr-str">'.'</span><span class="pr-cmd"> skills.json </span><span class="pr-flag">| bat --theme=ansi</span>
     </div>
 
-    <!-- proficiency bars -->
-    <div style="margin-bottom:22px">
+    <div style="margin-bottom:24px">
       <div class="sc-div">// core_proficiency</div>
       <div id="prog-rows">
         <div class="prog-row"><span class="prog-label">Python</span><div class="prog-bar"><div class="prog-fill" data-w="96"></div></div><span class="prog-val">96%</span></div>
-        <div class="prog-row"><span class="prog-label">ML/DL</span><div class="prog-bar"><div class="prog-fill" data-w="92"></div></div><span class="prog-val">92%</span></div>
+        <div class="prog-row"><span class="prog-label">ML / DL</span><div class="prog-bar"><div class="prog-fill" data-w="92"></div></div><span class="prog-val">92%</span></div>
         <div class="prog-row"><span class="prog-label">Generative AI</span><div class="prog-bar"><div class="prog-fill" data-w="90"></div></div><span class="prog-val">90%</span></div>
         <div class="prog-row"><span class="prog-label">Data Eng.</span><div class="prog-bar"><div class="prog-fill" data-w="88"></div></div><span class="prog-val">88%</span></div>
-        <div class="prog-row"><span class="prog-label">Cloud/AWS</span><div class="prog-bar"><div class="prog-fill" data-w="84"></div></div><span class="prog-val">84%</span></div>
+        <div class="prog-row"><span class="prog-label">Cloud / AWS</span><div class="prog-bar"><div class="prog-fill" data-w="84"></div></div><span class="prog-val">84%</span></div>
         <div class="prog-row"><span class="prog-label">R / Stats</span><div class="prog-bar"><div class="prog-fill" data-w="82"></div></div><span class="prog-val">82%</span></div>
       </div>
     </div>
@@ -904,10 +1114,10 @@ body::after{
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- 3. EXPERIENCE -->
-<div class="win reveal">
+<section class="win reveal" id="sec-2">
   <div class="tb">
     <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
     <div class="wt">experience.log — 3 entries</div>
@@ -925,9 +1135,7 @@ body::after{
             <div class="xp-co"><a href="https://ojasvissar.github.io/og/" target="_blank">Independent Consultant</a></div>
             <div class="xp-role">Data Scientist — Freelance</div>
           </div>
-          <div>
-            <div class="xp-period">Jun 2022 – Present</div>
-          </div>
+          <div><div class="xp-period">Jun 2022 – Present</div></div>
         </div>
         <div class="xp-loc">📍 Remote · 30+ clients · 3.5+ yrs active</div>
         <ul class="bullets">
@@ -971,10 +1179,10 @@ body::after{
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- 4. PROJECTS -->
-<div class="win reveal">
+<section class="win reveal" id="sec-3">
   <div class="tb">
     <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
     <div class="wt">~/projects/ — ls -la</div>
@@ -1017,17 +1225,17 @@ body::after{
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- 5. EDUCATION + PUB -->
-<div class="win reveal">
+<section class="win reveal" id="sec-4">
   <div class="tb">
     <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
     <div class="wt">education.db · publications.bib</div>
   </div>
   <div class="pad">
     <div class="pr">
-      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-sep">:</span><span class="pr-path">~/resume</span><span class="pr-$">$</span>
+      <span class="pr-u">ojasv</span><span class="pr-at">@</span><span class="pr-h">ubc-mds</span><span class="pr-$">$</span>
       <span class="pr-cmd">sqlite3 education.db </span><span class="pr-str">"SELECT * FROM degrees ORDER BY year DESC;"</span>
     </div>
 
@@ -1053,10 +1261,10 @@ body::after{
       <div class="pub-badge">✓ Accepted · Top 15% acceptance rate</div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- 6. INTERACTIVE SHELL -->
-<div class="win reveal">
+<section class="win reveal" id="sec-5">
   <div class="tb">
     <div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div>
     <div class="wt">interactive — try: help · whoami · hire · theme · matrix · contact</div>
@@ -1068,9 +1276,9 @@ body::after{
     </div>
     <div class="sh-out" id="sh-out">
       <div class="sh-line g">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-      <div class="sh-line c">  Welcome to ojasv's interactive resume shell v3.0</div>
+      <div class="sh-line c">  Welcome to ojasv's interactive resume shell v4.0</div>
       <div class="sh-line g">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-      <div class="sh-line d">  Type <span style="color:var(--am)">help</span> for available commands · ↑↓ for history</div>
+      <div class="sh-line d">  Type <span style="color:var(--am)">help</span> for available commands · ↑↓ for history · Tab to autocomplete</div>
     </div>
     <div class="sh-input-row">
       <span class="pr-u" style="user-select:none">ojasv</span>
@@ -1082,9 +1290,15 @@ body::after{
       <input id="cmd" type="text" autocomplete="off" spellcheck="false" placeholder="type a command..."/>
     </div>
   </div>
-</div>
+</section>
 
 </div><!-- #main -->
+
+<!-- Footer -->
+<div id="footer">
+  <span style="color:var(--p2)">// </span>built with <span style="color:var(--rd)">♥</span> and <span style="color:var(--am)">too much coffee</span><span style="color:var(--p2)"> // </span>
+  <span style="color:var(--txt2)">ojasv issar © 2026</span>
+</div>
 
 <!-- ══════ THEME PICKER ══════ -->
 <div id="theme-picker">
@@ -1128,40 +1342,28 @@ body::after{
 <script>
 /* ════════ THEME SYSTEM ════════ */
 const THEMES={
-  green:  {name:'Phosphor Green', p:'#00FF9F'},
-  amber:  {name:'Amber CRT',      p:'#FFB300'},
-  cyan:   {name:'Ice / Cyan',     p:'#00EEFF'},
-  red:    {name:'Danger Red',     p:'#FF3344'},
-  purple: {name:'Synthwave',      p:'#CC44FF'},
-  blue:   {name:'Ocean Blue',     p:'#4488FF'},
-  white:  {name:'Paper (Light)',  p:'#1A7F4A'},
+  green:{name:'Phosphor Green',p:'#00FF9F'},
+  amber:{name:'Amber CRT',p:'#FFB300'},
+  cyan:{name:'Ice / Cyan',p:'#00EEFF'},
+  red:{name:'Danger Red',p:'#FF3344'},
+  purple:{name:'Synthwave',p:'#CC44FF'},
+  blue:{name:'Ocean Blue',p:'#4488FF'},
+  white:{name:'Paper (Light)',p:'#1A7F4A'},
 };
-function setTheme(name, el){
-  // apply to html element
+function setTheme(name,el){
   const html=document.documentElement;
-  if(name==='green') html.removeAttribute('data-theme');
+  if(name==='green')html.removeAttribute('data-theme');
   else html.setAttribute('data-theme',name);
-  // update active swatch
   document.querySelectorAll('.tp-swatch').forEach(s=>s.classList.remove('active'));
-  if(el) el.classList.add('active');
-  // persist
+  if(el)el.classList.add('active');
   localStorage.setItem('oj-theme',name);
-  // update matrix colour
-  updateMatrixColor(name);
-}
-function updateMatrixColor(name){
-  // store current theme for matrix draw
   window.__termTheme=name;
 }
-function togglePicker(){
-  document.getElementById('theme-panel').classList.toggle('open');
-}
-// close picker on outside click
+function togglePicker(){document.getElementById('theme-panel').classList.toggle('open')}
 document.addEventListener('click',e=>{
   const picker=document.getElementById('theme-picker');
-  if(!picker.contains(e.target)) document.getElementById('theme-panel').classList.remove('open');
+  if(!picker.contains(e.target))document.getElementById('theme-panel').classList.remove('open');
 });
-// restore saved theme
 (function(){
   const saved=localStorage.getItem('oj-theme')||'green';
   if(saved!=='green'){
@@ -1171,84 +1373,110 @@ document.addEventListener('click',e=>{
   window.__termTheme=saved;
 })();
 
-/* ════════ MATRIX RAIN ════════ */
+/* ════════ MATRIX RAIN — smoother ════════ */
 (function(){
   const c=document.getElementById('matrix-canvas');
   const ctx=c.getContext('2d');
   let W,H,cols,drops;
-  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*(){}[]<>?/\\|~`ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵ';
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*(){}[]<>?/\\|~`ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵカキクケコサシスセソ';
   const themeColors={
-    green:'#00FF9F', amber:'#FFB300', cyan:'#00EEFF',
-    red:'#FF3344', purple:'#CC44FF', blue:'#4488FF', white:'#1A7F4A'
+    green:'#00FF9F',amber:'#FFB300',cyan:'#00EEFF',
+    red:'#FF3344',purple:'#CC44FF',blue:'#4488FF',white:'#1A7F4A'
   };
   function getColor(){return themeColors[window.__termTheme||'green']||'#00FF9F'}
   function init(){
     W=c.width=window.innerWidth;
     H=c.height=window.innerHeight;
-    cols=Math.floor(W/14);
-    drops=Array.from({length:cols},()=>Math.random()*H/14*-1);
+    const fontSize=14;
+    cols=Math.floor(W/fontSize);
+    drops=Array.from({length:cols},()=>Math.random()*H/fontSize*-1);
   }
   init();
-  window.addEventListener('resize',init);
-  function hexToRgb(h){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`${r},${g},${b}`}
+  let resizeTimer;
+  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(init,150)});
+  function hexToRgb(h){return`${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`}
   function draw(){
     const col=getColor();
     const rgb=hexToRgb(col);
-    ctx.fillStyle=`rgba(${document.documentElement.dataset.theme==='white'?'245,245,240':'0,0,0'},0.055)`;
+    const isLight=document.documentElement.dataset.theme==='white';
+    ctx.fillStyle=`rgba(${isLight?'245,245,240':'3,9,7'},0.05)`;
     ctx.fillRect(0,0,W,H);
-    ctx.font='13px JetBrains Mono,monospace';
+    ctx.font='13px JetBrains Mono,Fira Code,monospace';
     drops.forEach((y,i)=>{
       const ch=chars[Math.floor(Math.random()*chars.length)];
       const bright=Math.random();
-      if(bright>.97) ctx.fillStyle=`rgba(255,255,255,0.9)`;
-      else if(bright>.9) ctx.fillStyle=`rgba(${rgb},0.9)`;
-      else ctx.fillStyle=`rgba(${rgb},0.6)`;
+      if(bright>.97)ctx.fillStyle=`rgba(255,255,255,0.85)`;
+      else if(bright>.85)ctx.fillStyle=`rgba(${rgb},0.85)`;
+      else ctx.fillStyle=`rgba(${rgb},0.5)`;
       ctx.fillText(ch,i*14,y*14);
-      if(y*14>H && Math.random()>.975) drops[i]=0;
-      drops[i]+=.5+Math.random()*.5;
+      if(y*14>H&&Math.random()>.975)drops[i]=0;
+      drops[i]+=.4+Math.random()*.6;
     });
   }
-  setInterval(draw,55);
+  setInterval(draw,50);
 })();
 
-/* ════════ BOOT SEQUENCE ════════ */
+/* ════════ BOOT SEQUENCE — with percentage ════════ */
 const bootData=[
   {t:'BIOS v2.09  |  POST complete',s:'ok',d:100},
-  {t:'Detecting hardware — 32GB RAM · NVMe SSD',s:'ok',d:200},
-  {t:'Loading kernel: DataScienceOS 3.5 LTS',s:'ok',d:380},
-  {t:'Mounting /proc/experience (3.5 yrs, 30+ clients)',s:'ok',d:560},
-  {t:'Initializing ML modules — PyTorch · TensorFlow · scikit-learn',s:'ok',d:720},
-  {t:'Connecting data pipelines — Kafka · Airflow · PySpark · Snowflake',s:'ok',d:920},
-  {t:'Provisioning cloud — AWS Lambda · S3 · Bedrock · EventBridge',s:'ok',d:1100},
-  {t:'Spinning up vector stores — FAISS · ChromaDB · Elasticsearch',s:'ok',d:1280},
-  {t:'Loading NLP models — XLM-RoBERTa · BERT · LLaMA · Claude',s:'ok',d:1460},
-  {t:'Configuring identity — ojasv@ubc-mds',s:'ok',d:1680},
-  {t:'Running diagnostics...',s:'ok',d:1920},
-  {t:'WARNING: 30+ undeployed client projects found in backlog',s:'warn',d:2120},
-  {t:'All systems operational — launching resume.sh',s:'ok',d:2400},
+  {t:'Detecting hardware — 32GB RAM · NVMe SSD',s:'ok',d:250},
+  {t:'Loading kernel: DataScienceOS 3.5 LTS',s:'ok',d:430},
+  {t:'Mounting /proc/experience (3.5 yrs, 30+ clients)',s:'ok',d:620},
+  {t:'Initializing ML modules — PyTorch · TF · scikit-learn',s:'ok',d:800},
+  {t:'Connecting pipelines — Kafka · Airflow · PySpark · Snowflake',s:'ok',d:1000},
+  {t:'Provisioning cloud — AWS Lambda · S3 · Bedrock · EventBridge',s:'ok',d:1200},
+  {t:'Spinning up vector stores — FAISS · ChromaDB · Elasticsearch',s:'ok',d:1400},
+  {t:'Loading NLP — XLM-RoBERTa · BERT · LLaMA · Claude',s:'ok',d:1600},
+  {t:'Configuring identity — ojasv@ubc-mds',s:'ok',d:1850},
+  {t:'Running diagnostics...',s:'ok',d:2100},
+  {t:'WARNING: 30+ undeployed client projects in backlog',s:'warn',d:2350},
+  {t:'All systems operational — launching resume.sh',s:'ok',d:2600},
 ];
 const bl=document.getElementById('blog');
-bootData.forEach(({t,s,d})=>{
+const bootPct=document.getElementById('boot-pct');
+let bootProgress=0;
+bootData.forEach(({t,s,d},idx)=>{
   setTimeout(()=>{
     const el=document.createElement('div');
     el.className='bl';
     el.innerHTML=`<span>${t}</span><span class="${s}">${s==='ok'?'[  OK  ]':s==='warn'?'[ WARN ]':'[ FAIL ]'}</span>`;
     bl.appendChild(el);
     bl.scrollTop=bl.scrollHeight;
+    bootProgress=Math.round(((idx+1)/bootData.length)*100);
+    bootPct.textContent=bootProgress+'%';
   },d);
 });
 
 /* ════════ SCROLL REVEALS ════════ */
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}
-}),{threshold:.08});
+}),{threshold:.06});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ════════ NAV DOTS — active on scroll ════════ */
+const sections=document.querySelectorAll('section[id^="sec-"]');
+const navDots=document.querySelectorAll('.nav-dot');
+function scrollToSection(i){
+  sections[i]?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+const secObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      const idx=parseInt(e.target.id.replace('sec-',''));
+      navDots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+    }
+  });
+},{threshold:.3});
+sections.forEach(s=>secObs.observe(s));
 
 /* ════════ PROGRESS BARS ════════ */
 const pio=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){
-    e.target.querySelectorAll('.prog-fill').forEach(f=>{
-      setTimeout(()=>{f.style.width=f.dataset.w+'%'},100);
+    e.target.querySelectorAll('.prog-fill').forEach((f,i)=>{
+      setTimeout(()=>{
+        f.style.width=f.dataset.w+'%';
+        setTimeout(()=>f.classList.add('animated'),1400);
+      },i*80);
     });
     pio.unobserve(e.target);
   }
@@ -1256,12 +1484,38 @@ const pio=new IntersectionObserver(es=>es.forEach(e=>{
 const progParent=document.getElementById('prog-rows');
 if(progParent)pio.observe(progParent);
 
-/* ════════ INTERACTIVE SHELL ════════ */
+/* ════════ COUNTER ANIMATION ════════ */
+const counterObs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.querySelectorAll('[data-count]').forEach(el=>{
+      const target=parseFloat(el.dataset.count);
+      const isFloat=target%1!==0;
+      const isLarge=target>1000;
+      const duration=1200;
+      const start=performance.now();
+      function tick(now){
+        const elapsed=now-start;
+        const progress=Math.min(elapsed/duration,1);
+        const eased=1-Math.pow(1-progress,3);
+        let val=eased*target;
+        if(isLarge)el.textContent=Math.round(val).toLocaleString();
+        else if(isFloat)el.textContent=val.toFixed(1);
+        else el.textContent=Math.round(val);
+        if(progress<1)requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+    counterObs.unobserve(e.target);
+  }
+}),{threshold:.5});
+document.querySelectorAll('.stats-bar').forEach(bar=>counterObs.observe(bar));
+
+/* ════════ INTERACTIVE SHELL — enhanced ════════ */
 const inp=document.getElementById('cmd');
 const out=document.getElementById('sh-out');
 let history=[],histIdx=-1;
+const cmdNames=['help','whoami','skills','experience','projects','education','contact','hire','neofetch','theme','matrix','date','uname','clear','fortune','cowsay'];
 
-// click anywhere in terminal focuses input
 document.querySelectorAll('.win').forEach(w=>w.addEventListener('click',()=>inp.focus()));
 
 function pr(txt,cls=''){
@@ -1278,27 +1532,29 @@ function echoCmd(cmd){
 const cmds={
   help(){
     pr('','');
-    pr('┌─────────────────────────────────────────────────────┐','g');
-    pr('│           available commands                        │','g');
-    pr('├─────────────────────────────────────────────────────┤','g');
+    pr('┌─────────────────────────────────────────────────────────┐','g');
+    pr('│             available commands                          │','g');
+    pr('├─────────────────────────────────────────────────────────┤','g');
     const list=[
-      ['whoami    ','about ojasv'],
-      ['skills    ','list technical stack'],
-      ['experience','work history'],
-      ['projects  ','key projects'],
-      ['education ','academic background'],
-      ['contact   ','get in touch'],
-      ['hire      ','reasons to hire'],
-      ['neofetch  ','system info'],
-      ['theme     ','change shell colour (try: theme amber)'],
-      ['matrix    ','toggle matrix rain'],
-      ['date      ','current datetime'],
-      ['uname     ','system info'],
-      ['clear     ','clear terminal'],
+      ['whoami      ','about ojasv'],
+      ['skills      ','list technical stack'],
+      ['experience  ','work history'],
+      ['projects    ','key projects'],
+      ['education   ','academic background'],
+      ['contact     ','get in touch'],
+      ['hire        ','reasons to hire'],
+      ['neofetch    ','system info'],
+      ['theme       ','change shell colour (try: theme amber)'],
+      ['matrix      ','toggle matrix rain'],
+      ['fortune     ','random dev wisdom'],
+      ['cowsay      ','moo'],
+      ['date        ','current datetime'],
+      ['uname       ','system info'],
+      ['clear       ','clear terminal'],
     ];
-    list.forEach(([k,v])=>pr(`│  <span style="color:var(--am)">${k}</span>  <span style="color:var(--txt1)">—  ${v}</span>               │`));
-    pr('└─────────────────────────────────────────────────────┘','g');
-    pr('  use ↑↓ to cycle command history','d');
+    list.forEach(([k,v])=>pr(`│  <span style="color:var(--am)">${k}</span>  <span style="color:var(--txt1)">—  ${v}</span>`));
+    pr('└─────────────────────────────────────────────────────────┘','g');
+    pr('  use ↑↓ for history · Tab for autocomplete','d');
     pr('','');
   },
   whoami(){
@@ -1387,17 +1643,17 @@ const cmds={
   },
   hire(){
     pr('','');
-    pr('┌──────────────────────────────────────────────────┐','g');
-    pr('│         reasons to hire ojasv                    │','g');
-    pr('├──────────────────────────────────────────────────┤','g');
-    pr('│  ✓  Ships production-ready ML — not just notebks │','g');
-    pr('│  ✓  Full-stack: data→model→pipeline→deploy→viz   │','g');
-    pr('│  ✓  30+ real clients · EdTech · Fintech · E-comm │','g');
-    pr('│  ✓  Proven: LLMs, RAG, transformers, dist. sys   │','g');
-    pr('│  ✓  Published researcher + UBC MDS grad student  │','g');
-    pr('│  ✓  50K+ players modelled · 38K+ exams secured   │','g');
-    pr('│  ✓  Open to full-time from June 2026             │','g');
-    pr('└──────────────────────────────────────────────────┘','g');
+    pr('┌────────────────────────────────────────────────────┐','g');
+    pr('│           reasons to hire ojasv                    │','g');
+    pr('├────────────────────────────────────────────────────┤','g');
+    pr('│  ✓  Ships production-ready ML — not just notebooks │','g');
+    pr('│  ✓  Full-stack: data→model→pipeline→deploy→viz     │','g');
+    pr('│  ✓  30+ real clients · EdTech · Fintech · E-comm   │','g');
+    pr('│  ✓  Proven: LLMs, RAG, transformers, dist. sys     │','g');
+    pr('│  ✓  Published researcher + UBC MDS grad student    │','g');
+    pr('│  ✓  50K+ players modelled · 38K+ exams secured     │','g');
+    pr('│  ✓  Open to full-time from June 2026               │','g');
+    pr('└────────────────────────────────────────────────────┘','g');
     pr('  → run <span style="color:var(--am)">contact</span> to reach out','d');
     pr('','');
   },
@@ -1413,6 +1669,35 @@ const cmds={
     pr('                           <span style="color:var(--am)">Status:</span> <span style="color:var(--p)">● OPEN TO WORK</span>','');
     pr('','');
   },
+  fortune(){
+    const fortunes=[
+      '"Any fool can write code that a computer can understand. Good programmers write code that humans can understand." — Martin Fowler',
+      '"First, solve the problem. Then, write the code." — John Johnson',
+      '"In God we trust. All others must bring data." — W. Edwards Deming',
+      '"The best model is a model that ships." — ojasv, probably',
+      '"There are only two hard things in CS: cache invalidation and naming things." — Phil Karlton',
+      '"It works on my machine." — Every developer, always',
+      '"pip install --break-system-packages success" — ojasv@ubc-mds',
+      '"Premature optimization is the root of all evil." — Donald Knuth',
+      '"Talk is cheap. Show me the code." — Linus Torvalds',
+      '"sudo rm -rf / — just kidding. Please don\'t." — sysadmins everywhere',
+    ];
+    pr('','');
+    pr(`<span style="color:var(--cy)">${fortunes[Math.floor(Math.random()*fortunes.length)]}</span>`);
+    pr('','');
+  },
+  cowsay(){
+    pr('','');
+    pr(' ________________________________','g');
+    pr('< hire ojasv — it\'s a moo point >','g');
+    pr(' ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾','g');
+    pr('        \\   ^__^','g');
+    pr('         \\  (oo)\\_______','g');
+    pr('            (__)\\       )\\/\\','g');
+    pr('                ||----w |','g');
+    pr('                ||     ||','g');
+    pr('','');
+  },
   date(){
     const now=new Date();
     pr(`<span style="color:var(--p)">${now.toString()}</span>`);
@@ -1423,7 +1708,7 @@ const cmds={
   matrix(){
     const canvas=document.getElementById('matrix-canvas');
     const cur=parseFloat(window.getComputedStyle(canvas).opacity);
-    const next=cur>.02?.01:.045;
+    const next=cur>.02?.005:.04;
     canvas.style.transition='opacity .5s';
     canvas.style.opacity=next;
     pr(next>.02?'matrix: <span style="color:var(--p)">enabled</span>':'matrix: <span style="color:var(--txt1)">disabled</span>');
@@ -1446,19 +1731,28 @@ const cmds={
       return;
     }
     if(!THEMES[arg]){
-      pr(`<span style="color:var(--rd)">theme: unknown: "${arg}"</span>. Available: ${names.join(', ')}`, '');
+      pr(`<span style="color:var(--rd)">theme: unknown: "${arg}"</span>. Available: ${names.join(', ')}`,'');
       return;
     }
     const swatch=document.querySelector(`.tp-swatch[data-t="${arg}"]`);
-    setTheme(arg, swatch);
+    setTheme(arg,swatch);
     pr(`<span style="color:var(--p)">theme set to:</span> ${THEMES[arg].name}`);
-    pr(`<span style="color:var(--txt1)">tip: run <span style="color:var(--am)">theme</span> to see all options</span>`,'');
   },
 };
 
-// input handler with history
+// Tab autocomplete
 inp.addEventListener('keydown',e=>{
-  if(e.key==='ArrowUp'){
+  if(e.key==='Tab'){
+    e.preventDefault();
+    const val=inp.value.trim().toLowerCase();
+    if(!val)return;
+    const matches=cmdNames.filter(c=>c.startsWith(val));
+    if(matches.length===1)inp.value=matches[0];
+    else if(matches.length>1){
+      echoCmd(val);
+      pr(`<span style="color:var(--txt1)">matches: ${matches.map(m=>`<span style="color:var(--am)">${m}</span>`).join('  ')}</span>`);
+    }
+  } else if(e.key==='ArrowUp'){
     e.preventDefault();
     if(history.length){
       histIdx=Math.max(0,histIdx===-1?history.length-1:histIdx-1);
@@ -1472,26 +1766,51 @@ inp.addEventListener('keydown',e=>{
     }
   } else if(e.key==='Enter'){
     const raw=inp.value.trim();
-    inp.value=''; histIdx=-1;
+    inp.value='';histIdx=-1;
     if(!raw)return;
     history.push(raw);
     echoCmd(raw);
-    const key=raw.toLowerCase().split(' ')[0];
-    const arg=raw.toLowerCase().split(' ')[1];
+    const parts=raw.toLowerCase().split(/\s+/);
+    const key=parts[0];
+    const arg=parts[1];
     if(cmds[key]){
       cmds[key](arg);
     } else if(raw.toLowerCase()==='sudo hire ojasv'){
       pr('<span style="color:var(--rd)">sudo: this action requires: exceptional_taste && good_judgment</span>','');
       pr('<span style="color:var(--p)">... both detected. ✓ hire initiated.</span>');
+      pr('  → <span style="color:var(--am)">sending resume to your inbox...</span>','d');
+    } else if(raw.toLowerCase()==='rm -rf /'){
+      pr('<span style="color:var(--rd)">nice try. 🙅</span>');
+    } else if(raw.toLowerCase()==='exit'){
+      pr('<span style="color:var(--txt1)">logout: thanks for visiting! run </span><span style="color:var(--am)">contact</span><span style="color:var(--txt1)"> before you go.</span>');
+    } else if(raw.toLowerCase()==='ls'){
+      pr('README.md  resume.sh  skills.json  experience.log  projects/  education.db  publications.bib');
+    } else if(raw.toLowerCase()==='cat readme.md'){
+      pr('','');
+      pr('<span style="color:var(--p)"># Ojasv Issar — Data Scientist & ML Engineer</span>');
+      pr('','');
+      pr('Looking for a data scientist who ships production ML?');
+      pr('You\'ve found the right terminal. Type <span style="color:var(--am)">hire</span> to see why.');
+      pr('','');
+    } else if(raw.toLowerCase()==='pwd'){
+      pr('/home/ojasv/resume');
     } else {
       pr(`<span style="color:var(--rd)">bash: command not found: ${raw}</span><span style="color:var(--txt1)"> — type <span style="color:var(--am)">help</span> for commands</span>`,'');
     }
   }
 });
 
-// auto-focus on any click
 document.addEventListener('click',()=>inp.focus());
 inp.focus();
+
+/* ════════ KEYBOARD SHORTCUT ════════ */
+document.addEventListener('keydown',e=>{
+  // Ctrl+Shift+T to toggle theme picker
+  if(e.ctrlKey&&e.shiftKey&&e.key==='T'){
+    e.preventDefault();
+    togglePicker();
+  }
+});
 </script>
 </body>
 </html>
